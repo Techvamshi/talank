@@ -1,8 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const ProductCard = ({ product, isActive, onClick }) => {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <motion.div
       onClick={onClick}
@@ -47,24 +50,32 @@ const ProductCard = ({ product, isActive, onClick }) => {
           display: 'flex',
           alignItems: 'center'
         }}>
-          <motion.img 
-            src={product.image} 
-            alt={product.title} 
-            style={{
-              height: '100%',
-              width: 'auto',
-              objectFit: 'contain',
-              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
-            }}
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ 
-              delay: 0.3,
-              type: 'spring',
-              stiffness: 500,
-              damping: 15
-            }}
-          />
+          {product.image ? (
+            <Image 
+              src={imgError ? '/icons/fallback-icon.png' : product.image} 
+              alt={product.title}
+              width={40}
+              height={40}
+              onError={() => setImgError(true)}
+              style={{
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+              }}
+            />
+          ) : (
+            <div style={{
+              width: 40,
+              height: 40,
+              backgroundColor: product.color,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '8px',
+              color: 'white',
+              fontWeight: 'bold'
+            }}>
+              {product.title.charAt(0)}
+            </div>
+          )}
         </div>
         <motion.div 
           style={{
@@ -226,7 +237,6 @@ const ProductCard = ({ product, isActive, onClick }) => {
               >
                 Request Demo
               </motion.button>
-              
             </motion.div>
           </motion.div>
         )}
@@ -316,7 +326,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'ideateX',
       title: 'ideateX',
-      image: '/icon1.png',
+      image: '/icons/ideatex.png',
       tagline: 'Transforming ideas into winning businesses - NextGen digital ideation lab',
       icon: '💡',
       color: '#00CECB',
@@ -350,7 +360,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'iQLIMS',
       title: 'iQLIMS',
-      image: '/icon2.png',
+      image: '/icons/iqlims.png',
       tagline: 'Modern laboratory informatics for improved QC/QA and data management',
       icon: '🔬',
       color: '#FFC145',
@@ -384,7 +394,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'IoMT',
       title: 'IoMT',
-      image: '/icon3.png',
+      image: '/icons/iomt.png',
       tagline: 'Secure medical device connectivity for healthcare automation',
       icon: '⚕️',
       color: '#A05EB5',
@@ -418,7 +428,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'iQFORMS',
       title: 'iQFORMS',
-      image: '/icon4.png',
+      image: '/icons/iqforms.png',
       tagline: 'Cloud-based forms solution for clinical research and patient management',
       icon: '📋',
       color: '#5B7DB1',
@@ -452,7 +462,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'aiotroniX',
       title: 'aiotroniX',
-      image: '/icon5.png',
+      image: '/icons/aiotronix.png',
       tagline: 'Industrial IoT automation for smart factories and intelligent systems',
       icon: '🏭',
       color: '#FF5E5B',
@@ -510,29 +520,34 @@ export default function DigiceuticsDashboard() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             lineHeight: '1.2',
-            
           }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, type: 'spring' }}
         >
-          <img src="/center.png" alt="" style={{
-            marginLeft:'380px',
-          }} />
-          
+          <Image 
+            src="/logo.png" 
+            alt="Digiceutics Logo"
+            width={200}
+            height={80}
+            style={{
+              margin: '0 auto',
+              display: 'block'
+            }}
+          />
         </motion.h1>
         <motion.p
           style={{
             fontSize: '18px',
             color: '#4a5568',
-            maxWidth: '1630px',
+            maxWidth: '800px',
             margin: '0 auto'
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          At Digiceutics.ai, we are poised to revolutionize the tech landscape by providing innovative empowering digital solutions to businesses. Our primary focus is to enhance the communication between service providers and customers, thereby improving the overall customer experience. Operating through both online and physical distribution channels, we aim to cater to a diverse clientele that includes Health care, Pharma, Life Science's, FMCG, Manufacturing, Diagnostics, companies. With our commitment to quality and user-centric solutions, we believe that Digiceutical will play a crucial role in the evolving the ecosystem and builds COE.
+          At Digiceutics.ai, we are poised to revolutionize the tech landscape by providing innovative empowering digital solutions to businesses.
         </motion.p>
       </header>
       
@@ -640,23 +655,21 @@ export default function DigiceuticsDashboard() {
         >
           {products.map((product, index) => (
             <motion.div
-                key={product.id}
-                id={product.id} // Add this ID for linking
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 + 0.6 }}
-              >
+              key={product.id}
+              id={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 + 0.6 }}
+            >
               <ProductCard 
                 product={product}
-                isActive={true}
-                onClick={() => {}}
+                isActive={activeProduct?.id === product.id}
+                onClick={() => setActiveProduct(product)}
               />
             </motion.div>
           ))}
         </motion.div>
       </motion.div>
-      
-      
     </div>
   );
 }

@@ -2,6 +2,64 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const FloatingOrbs = ({ activeProduct }) => {
+  const [orbs, setOrbs] = useState([]);
+
+  useEffect(() => {
+    const newOrbs = Array.from({ length: 5 }).map(() => ({
+      width: `${Math.random() * 200 + 100}px`,
+      height: `${Math.random() * 200 + 100}px`,
+      top: `${Math.random() * 100}%`,
+      left: `${Math.random() * 100}%`,
+      x: (Math.random() - 0.5) * 100,
+      y: (Math.random() - 0.5) * 100,
+      duration: Math.random() * 20 + 10,
+    }));
+    setOrbs(newOrbs);
+  }, [activeProduct]);
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      zIndex: -1,
+      overflow: 'hidden',
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
+    }}>
+      {orbs.map((orb, i) => (
+        <motion.div
+          key={i}
+          style={{
+            position: 'absolute',
+            width: orb.width,
+            height: orb.height,
+            borderRadius: '50%',
+            background: activeProduct 
+              ? `radial-gradient(circle, ${activeProduct.color}10 0%, transparent 70%)`
+              : 'radial-gradient(circle, #5B7DB110 0%, transparent 70%)',
+            top: orb.top,
+            left: orb.left,
+            filter: 'blur(40px)'
+          }}
+          animate={{
+            x: [0, orb.x, 0],
+            y: [0, orb.y, 0],
+          }}
+          transition={{
+            duration: orb.duration,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut'
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const ProductCard = ({ product, isActive, onClick }) => {
   return (
     <motion.div
@@ -48,7 +106,7 @@ const ProductCard = ({ product, isActive, onClick }) => {
           alignItems: 'center'
         }}>
           <motion.img 
-            src={product.image} 
+            src={`/icon${product.iconNumber}.png`} 
             alt={product.title} 
             style={{
               height: '100%',
@@ -226,7 +284,6 @@ const ProductCard = ({ product, isActive, onClick }) => {
               >
                 Request Demo
               </motion.button>
-              
             </motion.div>
           </motion.div>
         )}
@@ -250,65 +307,6 @@ const ProductCard = ({ product, isActive, onClick }) => {
   );
 };
 
-const FloatingOrbs = ({ activeProduct }) => {
-  const [orbs, setOrbs] = useState([]);
-
-  useEffect(() => {
-    const newOrbs = Array.from({ length: 5 }).map(() => ({
-      width: `${Math.random() * 200 + 100}px`,
-      height: `${Math.random() * 200 + 100}px`,
-      top: `${Math.random() * 100}%`,
-      left: `${Math.random() * 100}%`,
-      x: (Math.random() - 0.5) * 100,
-      y: (Math.random() - 0.5) * 100,
-      duration: Math.random() * 20 + 10,
-    }));
-    setOrbs(newOrbs);
-  }, [activeProduct]);
-
-  if (orbs.length === 0) return null;
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      zIndex: -1,
-      overflow: 'hidden',
-      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
-    }}>
-      {orbs.map((orb, i) => (
-        <motion.div
-          key={i}
-          style={{
-            position: 'absolute',
-            width: orb.width,
-            height: orb.height,
-            borderRadius: '50%',
-            background: activeProduct 
-              ? `radial-gradient(circle, ${activeProduct.color}10 0%, transparent 70%)`
-              : 'radial-gradient(circle, #5B7DB110 0%, transparent 70%)',
-            top: orb.top,
-            left: orb.left,
-            filter: 'blur(40px)'
-          }}
-          animate={{
-            x: [0, orb.x, 0],
-            y: [0, orb.y, 0],
-          }}
-          transition={{
-            duration: orb.duration,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'easeInOut'
-          }}
-        />
-      ))}
-    </div>
-  );
-};
-
 export default function DigiceuticsDashboard() {
   const [activeProduct, setActiveProduct] = useState(null);
   
@@ -316,7 +314,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'ideateX',
       title: 'ideateX',
-      image: '/icon1.png',
+      iconNumber: 1,
       tagline: 'Transforming ideas into winning businesses - NextGen digital ideation lab',
       icon: '💡',
       color: '#00CECB',
@@ -350,7 +348,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'iQLIMS',
       title: 'iQLIMS',
-      image: '/icon2.png',
+      iconNumber: 2,
       tagline: 'Modern laboratory informatics for improved QC/QA and data management',
       icon: '🔬',
       color: '#FFC145',
@@ -384,7 +382,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'IoMT',
       title: 'IoMT',
-      image: '/icon3.png',
+      iconNumber: 3,
       tagline: 'Secure medical device connectivity for healthcare automation',
       icon: '⚕️',
       color: '#A05EB5',
@@ -418,7 +416,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'iQFORMS',
       title: 'iQFORMS',
-      image: '/icon4.png',
+      iconNumber: 4,
       tagline: 'Cloud-based forms solution for clinical research and patient management',
       icon: '📋',
       color: '#5B7DB1',
@@ -452,7 +450,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'aiotroniX',
       title: 'aiotroniX',
-      image: '/icon5.png',
+      iconNumber: 5,
       tagline: 'Industrial IoT automation for smart factories and intelligent systems',
       icon: '🏭',
       color: '#FF5E5B',
@@ -510,16 +508,12 @@ export default function DigiceuticsDashboard() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             lineHeight: '1.2',
-            
           }}
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, type: 'spring' }}
         >
-          <img src="/center.png" alt="" style={{
-            marginLeft:'380px',
-          }} />
-          
+          <img src="/center.png" alt="Digiceutics Logo" style={{ marginLeft: '380px' }} />
         </motion.h1>
         <motion.p
           style={{
@@ -640,12 +634,12 @@ export default function DigiceuticsDashboard() {
         >
           {products.map((product, index) => (
             <motion.div
-                key={product.id}
-                id={product.id} // Add this ID for linking
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 + 0.6 }}
-              >
+              key={product.id}
+              id={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 + 0.6 }}
+            >
               <ProductCard 
                 product={product}
                 isActive={true}
@@ -655,8 +649,6 @@ export default function DigiceuticsDashboard() {
           ))}
         </motion.div>
       </motion.div>
-      
-      
     </div>
   );
 }

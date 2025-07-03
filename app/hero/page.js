@@ -1,6 +1,5 @@
-'use client'
+'use client';
 import HeroSection from '@/components/Ani';
-
 import AutoPlayAudio from '@/components/Voice';
 import React, { useEffect, useState, useRef } from 'react';
 
@@ -17,32 +16,29 @@ function Page() {
 
     // Animation sequence
     const animationTimeline = [
-      { action: 'wave', delay: 0 },      
-      { action: 'talk', delay: 1500 },   
-      { action: 'point', delay: 3500 },  
-      { action: 'nod', delay: 6000 }    
+      { action: 'wave', delay: 0 },
+      { action: 'talk', delay: 1500 },
+      { action: 'point', delay: 3500 },
+      { action: 'nod', delay: 6000 },
     ];
 
-    const timers = animationTimeline.map(({ action, delay }) => {
-      return setTimeout(() => {
+    const timers = animationTimeline.map(({ action, delay }) =>
+      setTimeout(() => {
         setCurrentAction(action);
-        
         if (splineRef.current) {
           splineRef.current.setAttribute(`animation-${action}`, 'true');
         }
-      }, delay);
-    });
+      }, delay)
+    );
 
     return () => {
       document.body.removeChild(script);
-      timers.forEach(timer => clearTimeout(timer));
+      timers.forEach(clearTimeout);
     };
   }, []);
 
   return (
     <>
-      
-      
       <div style={{
         width: '100vw',
         overflowX: 'hidden',
@@ -51,19 +47,20 @@ function Page() {
         <div style={{
           minHeight: '100vh',
           display: 'flex',
-          justifyContent: 'flex-end', 
+          justifyContent: 'flex-end',
           alignItems: 'center',
           padding: '0 6rem',
           gap: '2rem',
           boxSizing: 'border-box',
           marginLeft: 'auto',
-          maxWidth: 'calc(100vw - 100px)', 
+          maxWidth: 'calc(100vw - 100px)',
         }}>
-          
+          {/* Text / Animation Section */}
           <div style={{ flex: '1 1 400px', maxWidth: '600px' }}>
             <HeroSection currentAction={currentAction} />
           </div>
 
+          {/* Spline Viewer Section */}
           <div style={{
             width: '100%',
             maxWidth: '700px',
@@ -81,8 +78,8 @@ function Page() {
                 backgroundColor: '#fff',
               }}
             ></spline-viewer>
-            
-            {/* Card screens image positioned on top */}
+
+            {/* Card image positioned over the spline */}
             <img 
               src="/Card screens.png" 
               alt="Card screens" 
@@ -93,24 +90,25 @@ function Page() {
                 transform: 'translate(-50%, -50%)',
                 width: '350px',
                 height: '350px',
-                zIndex: 10, // Ensure it's above the Spline viewer
-                pointerEvents: 'none' // Allows clicks to pass through to the Spline viewer
+                zIndex: 10,
+                pointerEvents: 'none',
               }}
             />
+
+            {/* Fixed floating white box */}
             <div style={{
-  position: 'absolute', // Add this
-  top: '95%',          // Position it near your image
-  left: '87%',
-  transform: 'translate(-50%, -50%)',
-  width: '150px',
-  height: '50px',
-  background: 'white', // Combined border properties
-  zIndex: 11,
-  pointerEvents: 'none',
-  position:'fixed',
-}}></div>
-            
-            {/* Speech bubble */}
+              position: 'fixed',
+              top: '95%',
+              left: '87%',
+              transform: 'translate(-50%, -50%)',
+              width: '150px',
+              height: '50px',
+              background: 'white',
+              zIndex: 11,
+              pointerEvents: 'none',
+            }}></div>
+
+            {/* Speech Bubble when talking */}
             {currentAction === 'talk' && (
               <div style={{
                 position: 'absolute',
@@ -124,7 +122,7 @@ function Page() {
                 maxWidth: '300px',
                 opacity: 0,
                 animation: 'fadeIn 0.5s forwards',
-                zIndex: 20, // Above both the Spline viewer and card screens
+                zIndex: 20,
               }}>
                 <div style={{
                   position: 'absolute',
@@ -136,14 +134,16 @@ function Page() {
                   borderRight: '10px solid transparent',
                   borderTop: '10px solid white',
                 }}></div>
-                <p style={{ margin: 0, color:'black' }}>Let me explain our services...</p>
+                <p style={{ margin: 0, color: 'black' }}>Let me explain our services...</p>
               </div>
             )}
           </div>
         </div>
       </div>
+
       <AutoPlayAudio />
 
+      {/* Animation keyframes */}
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateX(-50%) translateY(10px); }
