@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 const FloatingOrbs = ({ activeProduct }) => {
   const [orbs, setOrbs] = useState([]);
@@ -105,22 +106,16 @@ const ProductCard = ({ product, isActive, onClick }) => {
           display: 'flex',
           alignItems: 'center'
         }}>
-          <motion.img 
+          <Image 
             src={`/icon${product.iconNumber}.png`} 
-            alt={product.title} 
+            alt={product.title}
+            width={40}
+            height={40}
             style={{
               height: '100%',
               width: 'auto',
               objectFit: 'contain',
               filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
-            }}
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ 
-              delay: 0.3,
-              type: 'spring',
-              stiffness: 500,
-              damping: 15
             }}
           />
         </div>
@@ -513,7 +508,14 @@ export default function DigiceuticsDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, type: 'spring' }}
         >
-          <img src="/center.png" alt="Digiceutics Logo" style={{ marginLeft: '380px' }} />
+          <Image 
+            src="/center.png" 
+            alt="Digiceutics Logo" 
+            width={200}
+            height={100}
+            style={{ marginLeft: '380px' }}
+            priority
+          />
         </motion.h1>
         <motion.p
           style={{
@@ -526,7 +528,7 @@ export default function DigiceuticsDashboard() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          At Digiceutics.ai, we are poised to revolutionize the tech landscape by providing innovative empowering digital solutions to businesses. Our primary focus is to enhance the communication between service providers and customers, thereby improving the overall customer experience. Operating through both online and physical distribution channels, we aim to cater to a diverse clientele that includes Health care, Pharma, Life Science's, FMCG, Manufacturing, Diagnostics, companies. With our commitment to quality and user-centric solutions, we believe that Digiceutical will play a crucial role in the evolving the ecosystem and builds COE.
+          At Digiceutics.ai, we are poised to revolutionize the tech landscape by providing innovative empowering digital solutions to businesses. Our primary focus is to enhance the communication between service providers and customers, thereby improving the overall customer experience. Operating through both online and physical distribution channels, we aim to cater to a diverse clientele that includes Health care, Pharma, Life Sciences, FMCG, Manufacturing, Diagnostics, companies. With our commitment to quality and user-centric solutions, we believe that Digiceutical will play a crucial role in the evolving the ecosystem and builds COE.
         </motion.p>
       </header>
       
