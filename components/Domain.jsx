@@ -49,7 +49,7 @@ export default function OfferingSection() {
       const currentIndex = keys.indexOf(active);
       const nextIndex = (currentIndex + 1) % keys.length;
       setActive(keys[nextIndex]);
-    }, 5000); // Switch every 5 seconds
+    }, 3000); // Switch every 3 seconds
 
     return () => {
       window.removeEventListener('resize', updatePositions);

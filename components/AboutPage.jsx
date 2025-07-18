@@ -1,8 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const AboutPage = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -10,6 +12,14 @@ const AboutPage = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleContactClick = () => {
+    // Scroll to the contact section which is already in your layout
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    
+    // Alternatively, if you want to navigate to a separate contact page:
+    // router.push('/contact');
+  };
 
   return (
     <div style={{
@@ -251,18 +261,20 @@ const AboutPage = () => {
         }}>
           Connect with us and discover how Talank Global can help drive innovation and growth in your business.
         </p>
-        <button style={{
-          backgroundColor: '#4e74ff',
-          color: 'white',
-          border: 'none',
-          padding: isMobile ? '10px 25px' : '12px 30px',
-          fontSize: isMobile ? '16px' : '18px',
-          fontWeight: '600',
-          borderRadius: '30px',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
-        }}
+        <button 
+          onClick={handleContactClick}
+          style={{
+            backgroundColor: '#4e74ff',
+            color: 'white',
+            border: 'none',
+            padding: isMobile ? '10px 25px' : '12px 30px',
+            fontSize: isMobile ? '16px' : '18px',
+            fontWeight: '600',
+            borderRadius: '30px',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.2)'
+          }}
           onMouseOver={(e) => {
             e.target.style.transform = 'translateY(-2px)';
             e.target.style.backgroundColor = '#3a5bd9';
