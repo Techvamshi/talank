@@ -16,9 +16,9 @@ const frames = [
       opacity: '0.9',
       top: '12%',
       left: '10%',
-      textLeft: '60px',
-      textTop: '-15px',
-      maxWidth: '100px',
+      textLeft: '5px',
+      textTop: '-13px',
+      maxWidth: '190px',
       textAlign: 'center',
     },
     // Mobile version properties
@@ -50,8 +50,8 @@ const frames = [
       opacity: '0.9',
       top: '25%',
       left: '10%',
-      textLeft: '-10px',
-      textTop: '-120px',
+      textLeft: '0px',
+      textTop: '-45px',
       maxWidth: '160px'
     },
     mobile: {
