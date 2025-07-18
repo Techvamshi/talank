@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Head from "@/components/Head";
+import Headerr from "@/components/Headerr";
 
 // Geist Sans Font
 const geistSans = Geist({
@@ -34,10 +35,11 @@ export default function RootLayout({ children }) {
       <body
         className={montserrat.className} // ✅ Montserrat applied globally
         style={{
-          background: "white",
+          backgroundColor:'white',
         }}
       >
         <Head />
+        {/* <Head /> */}
         {children}
         <Footer />
       </body>

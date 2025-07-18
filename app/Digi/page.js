@@ -1,7 +1,275 @@
 'use client'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+
+const ProductCard = ({ product, isActive, onClick }) => {
+  const [imgError, setImgError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return (
+    <motion.div
+      onClick={onClick}
+      style={{
+        background: `linear-gradient(135deg, ${product.color} 0%, #f8f9fa 100%)`,
+        borderRadius: '20px',
+        padding: isMobile ? '20px' : '30px',
+        cursor: 'pointer',
+        boxShadow: isActive ? `0 0 30px ${product.color}40` : '0 4px 20px rgba(0,0,0,0.08)',
+        position: 'relative',
+        overflow: 'hidden',
+        height: isActive ? (isMobile ? 'auto' : '500px') : (isMobile ? '150px' : '200px'),
+        transition: 'height 0.5s ease',
+        marginBottom: '20px',
+        border: '1px solid rgba(0,0,0,0.05)'
+      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ 
+        opacity: 1, 
+        y: 0,
+        transition: { type: 'spring', stiffness: 100 }
+      }}
+      whileHover={{ 
+        y: isMobile ? 0 : -10,
+        transition: { type: 'spring', stiffness: 300 }
+      }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <motion.div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: isMobile ? '10px' : '20px'
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <div style={{
+          height: isMobile ? '30px' : '40px',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          {product.image ? (
+            <Image 
+              src={imgError ? '/' : product.image} 
+              alt={product.title}
+              width={isMobile ? 30 : 40}
+              height={isMobile ? 30 : 40}
+              onError={() => setImgError(true)}
+              style={{
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+              }}
+            />
+          ) : (
+            <div style={{
+              width: isMobile ? 30 : 40,
+              height: isMobile ? 30 : 40,
+              backgroundColor: product.color,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '8px',
+              color: 'white',
+              fontWeight: 'bold'
+            }}>
+              {product.title.charAt(0)}
+            </div>
+          )}
+        </div>
+        <motion.div 
+          style={{
+            width: isMobile ? '30px' : '40px',
+            height: isMobile ? '30px' : '40px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: product.color,
+            fontSize: isMobile ? '16px' : '20px',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+          }}
+          initial={{ rotate: -90, scale: 0 }}
+          animate={{ rotate: 0, scale: 1 }}
+          transition={{ 
+            delay: 0.4,
+            type: 'spring',
+            stiffness: 500,
+            damping: 10
+          }}
+          whileHover={{ rotate: isMobile ? 0 : 10 }}
+        >
+          {product.icon}
+        </motion.div>
+      </motion.div>
+      
+      <motion.p 
+        style={{
+          color: '#4a5568',
+          fontSize: isMobile ? '14px' : '16px',
+          marginBottom: isMobile ? '10px' : '20px'
+        }}
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3 }}
+      >
+        {product.tagline}
+      </motion.p>
+      
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ 
+              opacity: 1,
+              height: 'auto',
+              transition: { 
+                opacity: { duration: 0.4 },
+                height: { duration: 0.6, ease: [0.04, 0.62, 0.23, 0.98] }
+              }
+            }}
+            exit={{ 
+              opacity: 0,
+              height: 0,
+              transition: { 
+                opacity: { duration: 0.2 },
+                height: { duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }
+              }
+            }}
+          >
+            <motion.div 
+              style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))',
+                gap: isMobile ? '15px' : '20px',
+                marginBottom: isMobile ? '20px' : '30px'
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: 1,
+                transition: { staggerChildren: 0.1, delayChildren: 0.3 }
+              }}
+            >
+              {product.features.map((feature, i) => (
+                <motion.div 
+                  key={i} 
+                  style={{
+                    background: 'rgba(255,255,255,0.7)',
+                    padding: isMobile ? '12px' : '15px',
+                    borderRadius: '10px',
+                    backdropFilter: 'blur(5px)',
+                    boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
+                    border: '1px solid rgba(0,0,0,0.05)'
+                  }}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 200 }}
+                  whileHover={{ y: isMobile ? 0 : -5 }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: isMobile ? '8px' : '10px'
+                  }}>
+                    <motion.div 
+                      style={{
+                        width: isMobile ? '25px' : '30px',
+                        height: isMobile ? '25px' : '30px',
+                        borderRadius: '50%',
+                        background: product.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: isMobile ? '8px' : '10px',
+                        flexShrink: '0'
+                      }}
+                      whileHover={{ scale: isMobile ? 1 : 1.1 }}
+                    >
+                      <span style={{ color: '#fff', fontSize: isMobile ? '12px' : '14px' }}>{i+1}</span>
+                    </motion.div>
+                    <h4 style={{
+                      color: '#2d3748',
+                      margin: '0',
+                      fontSize: isMobile ? '14px' : '16px'
+                    }}>{feature.title}</h4>
+                  </div>
+                  <p style={{
+                    color: '#4a5568',
+                    fontSize: isMobile ? '12px' : '14px',
+                    margin: '0',
+                    marginLeft: isMobile ? '33px' : '40px'
+                  }}>{feature.description}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+            
+            <motion.div 
+              style={{
+                display: 'flex',
+                gap: '15px',
+                marginTop: 'auto',
+                justifyContent: isMobile ? 'center' : 'flex-start'
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: 1,
+                transition: { delay: 0.6 }
+              }}
+            >
+              <motion.button
+                style={{
+                  padding: isMobile ? '10px 20px' : '12px 25px',
+                  background: product.color,
+                  border: 'none',
+                  borderRadius: '50px',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontSize: isMobile ? '13px' : '14px',
+                  boxShadow: `0 4px 15px ${product.color}60`
+                }}
+                whileHover={{ 
+                  scale: isMobile ? 1 : 1.05,
+                  boxShadow: `0 6px 20px ${product.color}80`
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+              >
+                Request Demo
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      <motion.div 
+        style={{
+          position: 'absolute',
+          bottom: isMobile ? '10px' : '20px',
+          right: isMobile ? '10px' : '20px',
+          fontSize: isMobile ? '10px' : '12px',
+          color: '#718096'
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        {product.id}
+      </motion.div>
+    </motion.div>
+  );
+};
 
 const FloatingOrbs = ({ activeProduct }) => {
   const [orbs, setOrbs] = useState([]);
@@ -19,6 +287,7 @@ const FloatingOrbs = ({ activeProduct }) => {
     setOrbs(newOrbs);
   }, [activeProduct]);
 
+  if (orbs.length === 0) return null;
   return (
     <div style={{
       position: 'fixed',
@@ -61,255 +330,25 @@ const FloatingOrbs = ({ activeProduct }) => {
   );
 };
 
-const ProductCard = ({ product, isActive, onClick }) => {
-  return (
-    <motion.div
-      onClick={onClick}
-      style={{
-        background: `linear-gradient(135deg, ${product.color} 0%, #f8f9fa 100%)`,
-        borderRadius: '20px',
-        padding: '30px',
-        cursor: 'pointer',
-        boxShadow: isActive ? `0 0 30px ${product.color}40` : '0 4px 20px rgba(0,0,0,0.08)',
-        position: 'relative',
-        overflow: 'hidden',
-        height: isActive ? '500px' : '200px',
-        transition: 'height 0.5s ease',
-        marginBottom: '20px',
-        border: '1px solid rgba(0,0,0,0.05)'
-      }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ 
-        opacity: 1, 
-        y: 0,
-        transition: { type: 'spring', stiffness: 100 }
-      }}
-      whileHover={{ 
-        y: -10,
-        transition: { type: 'spring', stiffness: 300 }
-      }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <motion.div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '20px'
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <div style={{
-          height: '40px',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <Image 
-            src={`/icon${product.iconNumber}.png`} 
-            alt={product.title}
-            width={40}
-            height={40}
-            style={{
-              height: '100%',
-              width: 'auto',
-              objectFit: 'contain',
-              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
-            }}
-          />
-        </div>
-        <motion.div 
-          style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: product.color,
-            fontSize: '20px',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-          }}
-          initial={{ rotate: -90, scale: 0 }}
-          animate={{ rotate: 0, scale: 1 }}
-          transition={{ 
-            delay: 0.4,
-            type: 'spring',
-            stiffness: 500,
-            damping: 10
-          }}
-          whileHover={{ rotate: 10 }}
-        >
-          {product.icon}
-        </motion.div>
-      </motion.div>
-      
-      <motion.p 
-        style={{
-          color: '#4a5568',
-          fontSize: '16px',
-          marginBottom: '20px'
-        }}
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        {product.tagline}
-      </motion.p>
-      
-      <AnimatePresence>
-        {isActive && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ 
-              opacity: 1,
-              height: 'auto',
-              transition: { 
-                opacity: { duration: 0.4 },
-                height: { duration: 0.6, ease: [0.04, 0.62, 0.23, 0.98] }
-              }
-            }}
-            exit={{ 
-              opacity: 0,
-              height: 0,
-              transition: { 
-                opacity: { duration: 0.2 },
-                height: { duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }
-              }
-            }}
-          >
-            <motion.div 
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                gap: '20px',
-                marginBottom: '30px'
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: 1,
-                transition: { staggerChildren: 0.1, delayChildren: 0.3 }
-              }}
-            >
-              {product.features.map((feature, i) => (
-                <motion.div 
-                  key={i} 
-                  style={{
-                    background: 'rgba(255,255,255,0.7)',
-                    padding: '15px',
-                    borderRadius: '10px',
-                    backdropFilter: 'blur(5px)',
-                    boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
-                    border: '1px solid rgba(0,0,0,0.05)'
-                  }}
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ type: 'spring', stiffness: 200 }}
-                  whileHover={{ y: -5 }}
-                >
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '10px'
-                  }}>
-                    <motion.div 
-                      style={{
-                        width: '30px',
-                        height: '30px',
-                        borderRadius: '50%',
-                        background: product.color,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginRight: '10px',
-                        flexShrink: '0'
-                      }}
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      <span style={{ color: '#fff', fontSize: '14px' }}>{i+1}</span>
-                    </motion.div>
-                    <h4 style={{
-                      color: '#2d3748',
-                      margin: '0',
-                      fontSize: '16px'
-                    }}>{feature.title}</h4>
-                  </div>
-                  <p style={{
-                    color: '#4a5568',
-                    fontSize: '14px',
-                    margin: '0',
-                    marginLeft: '40px'
-                  }}>{feature.description}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-            
-            <motion.div 
-              style={{
-                display: 'flex',
-                gap: '15px',
-                marginTop: 'auto'
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: 1,
-                transition: { delay: 0.6 }
-              }}
-            >
-              <motion.button
-                style={{
-                  padding: '12px 25px',
-                  background: product.color,
-                  border: 'none',
-                  borderRadius: '50px',
-                  color: '#ffffff',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  boxShadow: `0 4px 15px ${product.color}60`
-                }}
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: `0 6px 20px ${product.color}80`
-                }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-              >
-                Request Demo
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      
-      <motion.div 
-        style={{
-          position: 'absolute',
-          bottom: '20px',
-          right: '20px',
-          fontSize: '12px',
-          color: '#718096'
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-      >
-        {product.id}
-      </motion.div>
-    </motion.div>
-  );
-};
-
 export default function DigiceuticsDashboard() {
   const [activeProduct, setActiveProduct] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const productRefs = useRef({});
   
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const products = [
     {
       id: 'ideateX',
       title: 'ideateX',
-      iconNumber: 1,
+      image: '/icon1.png',
       tagline: 'Transforming ideas into winning businesses - NextGen digital ideation lab',
       icon: '💡',
       color: '#00CECB',
@@ -343,7 +382,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'iQLIMS',
       title: 'iQLIMS',
-      iconNumber: 2,
+      image: '/icon2.png',
       tagline: 'Modern laboratory informatics for improved QC/QA and data management',
       icon: '🔬',
       color: '#FFC145',
@@ -377,7 +416,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'IoMT',
       title: 'IoMT',
-      iconNumber: 3,
+      image: '/icon3.png',
       tagline: 'Secure medical device connectivity for healthcare automation',
       icon: '⚕️',
       color: '#A05EB5',
@@ -411,7 +450,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'iQFORMS',
       title: 'iQFORMS',
-      iconNumber: 4,
+      image: '/icon4.png',
       tagline: 'Cloud-based forms solution for clinical research and patient management',
       icon: '📋',
       color: '#5B7DB1',
@@ -445,7 +484,7 @@ export default function DigiceuticsDashboard() {
     {
       id: 'aiotroniX',
       title: 'aiotroniX',
-      iconNumber: 5,
+      image: '/icon5.png',
       tagline: 'Industrial IoT automation for smart factories and intelligent systems',
       icon: '🏭',
       color: '#FF5E5B',
@@ -478,10 +517,36 @@ export default function DigiceuticsDashboard() {
     }
   ];
 
+  const handleProductClick = (product) => {
+    if (activeProduct?.id === product.id) {
+      // If clicking the same product that's already active, collapse it
+      setActiveProduct(null);
+      // Optional: Scroll back to top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      // Set the new active product
+      setActiveProduct(product);
+      // Scroll to the product card
+      setTimeout(() => {
+        productRefs.current[product.id]?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100); // Small delay to allow the card to expand
+    }
+  };
+
+  const setProductRef = (id, ref) => {
+    productRefs.current[id] = ref;
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
-      padding: '40px',
+      padding: isMobile ? '20px' : '40px',
       color: '#2d3748',
       fontFamily: "'Inter', sans-serif",
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)'
@@ -489,46 +554,55 @@ export default function DigiceuticsDashboard() {
       <FloatingOrbs activeProduct={activeProduct} />
       
       <header style={{
-        marginBottom: '50px',
-        textAlign: 'center'
+        marginBottom: isMobile ? '30px' : '50px',
+        padding: isMobile ? '0 10px' : '0',
+        position: 'relative',
+        height: isMobile ? '80px' : '120px'
       }}>
-        <motion.h1 
+        <motion.div
           style={{
-            fontSize: '48px',
-            fontWeight: '800',
-            marginBottom: '20px',
-            background: activeProduct 
-              ? `-webkit-linear-gradient(45deg, ${activeProduct.color}, #2d3748)`
-              : '-webkit-linear-gradient(45deg, #00CECB, #5B7DB1)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            lineHeight: '1.2',
-          }}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, type: 'spring' }}
-        >
-          <Image 
-            src="/center.png" 
-            alt="Digiceutics Logo" 
-            width={200}
-            height={100}
-            style={{ marginLeft: '380px' }}
-            priority
-          />
-        </motion.h1>
-        <motion.p
-          style={{
-            fontSize: '18px',
-            color: '#4a5568',
-            maxWidth: '1630px',
-            margin: '0 auto'
+            position: 'absolute',
+            top: isMobile ? '10px' : '20px',
+            left: isMobile ? '10px' : '40px',
+            width: isMobile ? '180px' : '240px',
+            height: isMobile ? '60px' : '80px',
+            zIndex: 10
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          At Digiceutics.ai, we are poised to revolutionize the tech landscape by providing innovative empowering digital solutions to businesses. Our primary focus is to enhance the communication between service providers and customers, thereby improving the overall customer experience. Operating through both online and physical distribution channels, we aim to cater to a diverse clientele that includes Health care, Pharma, Life Sciences, FMCG, Manufacturing, Diagnostics, companies. With our commitment to quality and user-centric solutions, we believe that Digiceutical will play a crucial role in the evolving the ecosystem and builds COE.
+          <Image 
+            src="/center.png" 
+            alt="Digiceutics Logo"
+            width={isMobile ? 180 : 240}
+            height={isMobile ? 60 : 80}
+            style={{
+              objectFit: 'contain',
+              width: '100%',
+              height: '100%',
+              marginLeft: isMobile ? '120px' : '530px',
+              marginTop: isMobile ? '20px' : '',
+              paddingBottom: isMobile ? '20px' : '',
+            }}
+          />
+        </motion.div>
+        
+        <motion.p
+          style={{
+            fontSize: isMobile ? '14px' : '18px',
+            color: '#4a5568',
+            maxWidth: '800px',
+            margin: '0 auto',
+            lineHeight: '1.5',
+            paddingTop: isMobile ? '70px' : '100px',
+            textAlign: isMobile ? 'center' : 'center'
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          At Digiceutics.ai, we are poised to revolutionize the tech landscape by providing innovative empowering digital solutions to businesses.
         </motion.p>
       </header>
       
@@ -545,9 +619,9 @@ export default function DigiceuticsDashboard() {
         <motion.div 
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '30px',
-            marginBottom: '40px'
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: isMobile ? '15px' : '30px',
+            marginBottom: isMobile ? '20px' : '40px'
           }}
           initial={{ opacity: 0 }}
           animate={{ 
@@ -561,7 +635,7 @@ export default function DigiceuticsDashboard() {
               style={{
                 background: 'rgba(255,255,255,0.7)',
                 borderRadius: '15px',
-                padding: '20px',
+                padding: isMobile ? '15px' : '20px',
                 cursor: 'pointer',
                 border: activeProduct?.id === product.id 
                   ? `2px solid ${product.color}`
@@ -574,43 +648,43 @@ export default function DigiceuticsDashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1, type: 'spring' }}
               whileHover={{ 
-                y: -5,
+                y: isMobile ? 0 : -5,
                 background: 'rgba(255,255,255,0.9)',
                 boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
               }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => setActiveProduct(product)}
+              onClick={() => handleProductClick(product)}
             >
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                marginBottom: '15px'
+                marginBottom: isMobile ? '10px' : '15px'
               }}>
                 <motion.div 
                   style={{
-                    width: '50px',
-                    height: '50px',
+                    width: isMobile ? '40px' : '50px',
+                    height: isMobile ? '40px' : '50px',
                     borderRadius: '15px',
                     background: product.color,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginRight: '15px',
-                    fontSize: '24px',
+                    marginRight: isMobile ? '10px' : '15px',
+                    fontSize: isMobile ? '20px' : '24px',
                     color: '#ffffff',
                     boxShadow: `0 4px 15px ${product.color}60`
                   }}
-                  whileHover={{ rotate: 10 }}
+                  whileHover={{ rotate: isMobile ? 0 : 10 }}
                 >
                   {product.icon}
                 </motion.div>
                 <div style={{
-                  height: '30px',
+                  height: isMobile ? '25px' : '30px',
                   display: 'flex',
                   alignItems: 'center'
                 }}>
                   <h3 style={{
-                    fontSize: '20px',
+                    fontSize: isMobile ? '16px' : '20px',
                     fontWeight: '600',
                     margin: '0',
                     color: '#2d3748'
@@ -619,7 +693,7 @@ export default function DigiceuticsDashboard() {
               </div>
               <p style={{
                 color: '#4a5568',
-                fontSize: '14px',
+                fontSize: isMobile ? '12px' : '14px',
                 margin: '0'
               }}>{product.tagline}</p>
             </motion.div>
@@ -627,7 +701,7 @@ export default function DigiceuticsDashboard() {
         </motion.div>
         
         <motion.div 
-          style={{ display: 'grid', gap: '20px' }}
+          style={{ display: 'grid', gap: isMobile ? '15px' : '20px' }}
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 1,
@@ -641,11 +715,12 @@ export default function DigiceuticsDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 + 0.6 }}
+              ref={(ref) => setProductRef(product.id, ref)}
             >
               <ProductCard 
                 product={product}
-                isActive={true}
-                onClick={() => {}}
+                isActive={activeProduct?.id === product.id}
+                onClick={() => handleProductClick(product)}
               />
             </motion.div>
           ))}

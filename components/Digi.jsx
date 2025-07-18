@@ -5,6 +5,16 @@ import Image from 'next/image';
 
 const ProductCard = ({ product, isActive, onClick }) => {
   const [imgError, setImgError] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <motion.div
@@ -12,12 +22,12 @@ const ProductCard = ({ product, isActive, onClick }) => {
       style={{
         background: `linear-gradient(135deg, ${product.color} 0%, #f8f9fa 100%)`,
         borderRadius: '20px',
-        padding: '30px',
+        padding: isMobile ? '20px' : '30px',
         cursor: 'pointer',
         boxShadow: isActive ? `0 0 30px ${product.color}40` : '0 4px 20px rgba(0,0,0,0.08)',
         position: 'relative',
         overflow: 'hidden',
-        height: isActive ? '500px' : '200px',
+        height: isActive ? (isMobile ? 'auto' : '500px') : (isMobile ? '150px' : '200px'),
         transition: 'height 0.5s ease',
         marginBottom: '20px',
         border: '1px solid rgba(0,0,0,0.05)'
@@ -29,7 +39,7 @@ const ProductCard = ({ product, isActive, onClick }) => {
         transition: { type: 'spring', stiffness: 100 }
       }}
       whileHover={{ 
-        y: -10,
+        y: isMobile ? 0 : -10,
         transition: { type: 'spring', stiffness: 300 }
       }}
       whileTap={{ scale: 0.98 }}
@@ -39,14 +49,14 @@ const ProductCard = ({ product, isActive, onClick }) => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '20px'
+          marginBottom: isMobile ? '10px' : '20px'
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
         <div style={{
-          height: '40px',
+          height: isMobile ? '30px' : '40px',
           display: 'flex',
           alignItems: 'center'
         }}>
@@ -54,8 +64,8 @@ const ProductCard = ({ product, isActive, onClick }) => {
             <Image 
               src={imgError ? '/icons/fallback-icon.png' : product.image} 
               alt={product.title}
-              width={40}
-              height={40}
+              width={isMobile ? 30 : 40}
+              height={isMobile ? 30 : 40}
               onError={() => setImgError(true)}
               style={{
                 filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
@@ -63,8 +73,8 @@ const ProductCard = ({ product, isActive, onClick }) => {
             />
           ) : (
             <div style={{
-              width: 40,
-              height: 40,
+              width: isMobile ? 30 : 40,
+              height: isMobile ? 30 : 40,
               backgroundColor: product.color,
               display: 'flex',
               alignItems: 'center',
@@ -79,15 +89,15 @@ const ProductCard = ({ product, isActive, onClick }) => {
         </div>
         <motion.div 
           style={{
-            width: '40px',
-            height: '40px',
+            width: isMobile ? '30px' : '40px',
+            height: isMobile ? '30px' : '40px',
             borderRadius: '50%',
             background: 'rgba(255,255,255,0.7)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: product.color,
-            fontSize: '20px',
+            fontSize: isMobile ? '16px' : '20px',
             boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
           }}
           initial={{ rotate: -90, scale: 0 }}
@@ -98,7 +108,7 @@ const ProductCard = ({ product, isActive, onClick }) => {
             stiffness: 500,
             damping: 10
           }}
-          whileHover={{ rotate: 10 }}
+          whileHover={{ rotate: isMobile ? 0 : 10 }}
         >
           {product.icon}
         </motion.div>
@@ -107,8 +117,8 @@ const ProductCard = ({ product, isActive, onClick }) => {
       <motion.p 
         style={{
           color: '#4a5568',
-          fontSize: '16px',
-          marginBottom: '20px'
+          fontSize: isMobile ? '14px' : '16px',
+          marginBottom: isMobile ? '10px' : '20px'
         }}
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
@@ -141,9 +151,9 @@ const ProductCard = ({ product, isActive, onClick }) => {
             <motion.div 
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                gap: '20px',
-                marginBottom: '30px'
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))',
+                gap: isMobile ? '15px' : '20px',
+                marginBottom: isMobile ? '20px' : '30px'
               }}
               initial={{ opacity: 0 }}
               animate={{ 
@@ -156,7 +166,7 @@ const ProductCard = ({ product, isActive, onClick }) => {
                   key={i} 
                   style={{
                     background: 'rgba(255,255,255,0.7)',
-                    padding: '15px',
+                    padding: isMobile ? '12px' : '15px',
                     borderRadius: '10px',
                     backdropFilter: 'blur(5px)',
                     boxShadow: '0 2px 15px rgba(0,0,0,0.05)',
@@ -165,40 +175,40 @@ const ProductCard = ({ product, isActive, onClick }) => {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ type: 'spring', stiffness: 200 }}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: isMobile ? 0 : -5 }}
                 >
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    marginBottom: '10px'
+                    marginBottom: isMobile ? '8px' : '10px'
                   }}>
                     <motion.div 
                       style={{
-                        width: '30px',
-                        height: '30px',
+                        width: isMobile ? '25px' : '30px',
+                        height: isMobile ? '25px' : '30px',
                         borderRadius: '50%',
                         background: product.color,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginRight: '10px',
+                        marginRight: isMobile ? '8px' : '10px',
                         flexShrink: '0'
                       }}
-                      whileHover={{ scale: 1.1 }}
+                      whileHover={{ scale: isMobile ? 1 : 1.1 }}
                     >
-                      <span style={{ color: '#fff', fontSize: '14px' }}>{i+1}</span>
+                      <span style={{ color: '#fff', fontSize: isMobile ? '12px' : '14px' }}>{i+1}</span>
                     </motion.div>
                     <h4 style={{
                       color: '#2d3748',
                       margin: '0',
-                      fontSize: '16px'
+                      fontSize: isMobile ? '14px' : '16px'
                     }}>{feature.title}</h4>
                   </div>
                   <p style={{
                     color: '#4a5568',
-                    fontSize: '14px',
+                    fontSize: isMobile ? '12px' : '14px',
                     margin: '0',
-                    marginLeft: '40px'
+                    marginLeft: isMobile ? '33px' : '40px'
                   }}>{feature.description}</p>
                 </motion.div>
               ))}
@@ -208,7 +218,8 @@ const ProductCard = ({ product, isActive, onClick }) => {
               style={{
                 display: 'flex',
                 gap: '15px',
-                marginTop: 'auto'
+                marginTop: 'auto',
+                justifyContent: isMobile ? 'center' : 'flex-start'
               }}
               initial={{ opacity: 0 }}
               animate={{ 
@@ -218,18 +229,18 @@ const ProductCard = ({ product, isActive, onClick }) => {
             >
               <motion.button
                 style={{
-                  padding: '12px 25px',
+                  padding: isMobile ? '10px 20px' : '12px 25px',
                   background: product.color,
                   border: 'none',
                   borderRadius: '50px',
                   color: '#ffffff',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  fontSize: '14px',
+                  fontSize: isMobile ? '13px' : '14px',
                   boxShadow: `0 4px 15px ${product.color}60`
                 }}
                 whileHover={{ 
-                  scale: 1.05,
+                  scale: isMobile ? 1 : 1.05,
                   boxShadow: `0 6px 20px ${product.color}80`
                 }}
                 whileTap={{ scale: 0.95 }}
@@ -245,9 +256,9 @@ const ProductCard = ({ product, isActive, onClick }) => {
       <motion.div 
         style={{
           position: 'absolute',
-          bottom: '20px',
-          right: '20px',
-          fontSize: '12px',
+          bottom: isMobile ? '10px' : '20px',
+          right: isMobile ? '10px' : '20px',
+          fontSize: isMobile ? '10px' : '12px',
           color: '#718096'
         }}
         initial={{ opacity: 0 }}
@@ -321,7 +332,17 @@ const FloatingOrbs = ({ activeProduct }) => {
 
 export default function DigiceuticsDashboard() {
   const [activeProduct, setActiveProduct] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const products = [
     {
       id: 'ideateX',
@@ -498,7 +519,7 @@ export default function DigiceuticsDashboard() {
   return (
     <div style={{
       minHeight: '100vh',
-      padding: '40px',
+      padding: isMobile ? '20px' : '40px',
       color: '#2d3748',
       fontFamily: "'Inter', sans-serif",
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)'
@@ -506,42 +527,35 @@ export default function DigiceuticsDashboard() {
       <FloatingOrbs activeProduct={activeProduct} />
       
       <header style={{
-        marginBottom: '50px',
-        textAlign: 'center'
+        marginBottom: isMobile ? '30px' : '50px',
+        textAlign: 'center',
+        padding: isMobile ? '0 10px' : '0'
       }}>
-        <motion.h1 
-          style={{
-            fontSize: '48px',
-            fontWeight: '800',
-            marginBottom: '20px',
-            background: activeProduct 
-              ? `-webkit-linear-gradient(45deg, ${activeProduct.color}, #2d3748)`
-              : '-webkit-linear-gradient(45deg, #00CECB, #5B7DB1)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            lineHeight: '1.2',
-          }}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, type: 'spring' }}
-        >
+        {/* <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: isMobile ? '15px' : '20px'
+        }}>
           <Image 
             src="/logo.png" 
             alt="Digiceutics Logo"
-            width={200}
-            height={80}
+            width={isMobile ? 180 : 240}
+            height={isMobile ? 60 : 80}
             style={{
-              margin: '0 auto',
-              display: 'block'
+              objectFit: 'contain',
+              maxWidth: '100%',
+              height: 'auto',
+              marginLeft:isMobile ?'-200px':'100px',
             }}
           />
-        </motion.h1>
+        </div> */}
         <motion.p
           style={{
-            fontSize: '18px',
+            fontSize: isMobile ? '14px' : '18px',
             color: '#4a5568',
             maxWidth: '800px',
-            margin: '0 auto'
+            margin: '0 auto',
+            lineHeight: '1.5'
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -564,9 +578,9 @@ export default function DigiceuticsDashboard() {
         <motion.div 
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '30px',
-            marginBottom: '40px'
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: isMobile ? '15px' : '30px',
+            marginBottom: isMobile ? '20px' : '40px'
           }}
           initial={{ opacity: 0 }}
           animate={{ 
@@ -580,7 +594,7 @@ export default function DigiceuticsDashboard() {
               style={{
                 background: 'rgba(255,255,255,0.7)',
                 borderRadius: '15px',
-                padding: '20px',
+                padding: isMobile ? '15px' : '20px',
                 cursor: 'pointer',
                 border: activeProduct?.id === product.id 
                   ? `2px solid ${product.color}`
@@ -593,7 +607,7 @@ export default function DigiceuticsDashboard() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: index * 0.1, type: 'spring' }}
               whileHover={{ 
-                y: -5,
+                y: isMobile ? 0 : -5,
                 background: 'rgba(255,255,255,0.9)',
                 boxShadow: '0 8px 25px rgba(0,0,0,0.1)'
               }}
@@ -603,33 +617,33 @@ export default function DigiceuticsDashboard() {
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                marginBottom: '15px'
+                marginBottom: isMobile ? '10px' : '15px'
               }}>
                 <motion.div 
                   style={{
-                    width: '50px',
-                    height: '50px',
+                    width: isMobile ? '40px' : '50px',
+                    height: isMobile ? '40px' : '50px',
                     borderRadius: '15px',
                     background: product.color,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginRight: '15px',
-                    fontSize: '24px',
+                    marginRight: isMobile ? '10px' : '15px',
+                    fontSize: isMobile ? '20px' : '24px',
                     color: '#ffffff',
                     boxShadow: `0 4px 15px ${product.color}60`
                   }}
-                  whileHover={{ rotate: 10 }}
+                  whileHover={{ rotate: isMobile ? 0 : 10 }}
                 >
                   {product.icon}
                 </motion.div>
                 <div style={{
-                  height: '30px',
+                  height: isMobile ? '25px' : '30px',
                   display: 'flex',
                   alignItems: 'center'
                 }}>
                   <h3 style={{
-                    fontSize: '20px',
+                    fontSize: isMobile ? '16px' : '20px',
                     fontWeight: '600',
                     margin: '0',
                     color: '#2d3748'
@@ -638,7 +652,7 @@ export default function DigiceuticsDashboard() {
               </div>
               <p style={{
                 color: '#4a5568',
-                fontSize: '14px',
+                fontSize: isMobile ? '12px' : '14px',
                 margin: '0'
               }}>{product.tagline}</p>
             </motion.div>
@@ -646,7 +660,7 @@ export default function DigiceuticsDashboard() {
         </motion.div>
         
         <motion.div 
-          style={{ display: 'grid', gap: '20px' }}
+          style={{ display: 'grid', gap: isMobile ? '15px' : '20px' }}
           initial={{ opacity: 0 }}
           animate={{ 
             opacity: 1,

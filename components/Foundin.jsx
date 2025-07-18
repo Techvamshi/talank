@@ -13,7 +13,7 @@ const FoundingTeamSection = () => {
         'Hi Tech Solutions Development',
         'Go-To-Market (GTM) Strategies',
       ],
-      photo: '/ravikumar.png', // ❗️ Update path as per your assets
+      photo: '/ravikumar.png',
     },
     {
       name: 'Deepak Gowda',
@@ -25,23 +25,24 @@ const FoundingTeamSection = () => {
         'Business Transformation',
         'IaaS, PaaS & SaaS Systems',
       ],
-      photo: '/deepak.png', // ❗️ Update path as per your assets
+      photo: '/deepak.png',
     },
   ];
 
   return (
     <section
       style={{
-        padding: '60px 20px',
+        padding: '40px 15px',
         backgroundColor: '#f4f8ff',
         fontFamily: 'Segoe UI, sans-serif',
+        
       }}
     >
       <h2
         style={{
           textAlign: 'center',
-          fontSize: '36px',
-          marginBottom: '40px',
+          fontSize: '28px',
+          marginBottom: '30px',
           color: '#1a237e',
         }}
       >
@@ -51,9 +52,11 @@ const FoundingTeamSection = () => {
       <div
         style={{
           display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          gap: '30px',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '25px',
+          maxWidth: '1200px',
+          margin: '0 auto',
         }}
       >
         {teamMembers.map((member, index) => (
@@ -63,10 +66,10 @@ const FoundingTeamSection = () => {
               backgroundColor: '#ffffff',
               borderRadius: '12px',
               boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+              width: '100%',
               maxWidth: '400px',
-              padding: '30px',
+              padding: '25px 20px',
               transition: 'transform 0.3s ease',
-              flex: '1 1 300px',
               textAlign: 'center',
             }}
           >
@@ -75,35 +78,50 @@ const FoundingTeamSection = () => {
               src={member.photo}
               alt={member.name}
               style={{
-                width: '120px',
-                height: '120px',
+                width: '100px',
+                height: '100px',
                 borderRadius: '50%',
                 objectFit: 'cover',
-                marginBottom: '20px',
+                marginBottom: '15px',
                 border: '4px solid rgba(26, 35, 126, 0.1)',
-                marginLeft:'100px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
               }}
             />
 
             {/* ─── Name & Title ───────────────────────── */}
-            <h3 style={{ marginBottom: '8px', color: '#0d47a1' }}>
+            <h3 style={{ 
+                marginBottom: '6px', 
+                color: '#0d47a1',
+                fontSize: '20px'
+              }}>
               {member.name}
             </h3>
-            <p style={{ fontWeight: 'bold', color: '#555', marginBottom: '15px' }}>
+            <p style={{ 
+                fontWeight: 'bold', 
+                color: '#555', 
+                marginBottom: '12px',
+                fontSize: '14px'
+              }}>
               {member.title}
             </p>
 
             {/* ─── Bio ────────────────────────────────── */}
-            <p style={{ lineHeight: '1.6', color: '#333', marginBottom: '20px' }}>
+            <p style={{ 
+                lineHeight: '1.5', 
+                color: '#333', 
+                marginBottom: '15px',
+                fontSize: '14px'
+              }}>
               {member.bio}
             </p>
 
             {/* ─── Expertise List ─────────────────────── */}
             <h4
               style={{
-                fontSize: '18px',
+                fontSize: '16px',
                 color: '#1a237e',
-                marginBottom: '10px',
+                marginBottom: '8px',
               }}
             >
               Key Expertise
@@ -112,13 +130,15 @@ const FoundingTeamSection = () => {
               style={{
                 paddingLeft: '20px',
                 color: '#444',
-                lineHeight: '1.8',
-                fontSize: '15.5px',
+                lineHeight: '1.6',
+                fontSize: '14px',
                 textAlign: 'left',
+                margin: '0 auto',
+                maxWidth: '300px'
               }}
             >
               {member.expertise.map((item, idx) => (
-                <li key={idx} style={{ listStyleType: 'disc' }}>
+                <li key={idx} style={{ listStyleType: 'disc', marginBottom: '4px' }}>
                   {item}
                 </li>
               ))}

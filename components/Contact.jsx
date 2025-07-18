@@ -32,28 +32,29 @@ const ContactUsPage = () => {
   };
 
   return (
-    <div style={{ width: '100%', backgroundColor: 'white', display: 'flex', justifyContent: 'center' }}>
+    <div style={{ width: '100%', backgroundColor: 'white', display: 'flex', justifyContent: 'center', padding: '1rem' }}>
       <div
         style={{
           display: 'flex',
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'flex-start',
-          width: '90%',
+          width: '100%',
           maxWidth: '1200px',
-          gap: '2rem'
+          gap: '2rem',
+          flexWrap: 'wrap'
         }}
       >
         {/* Left Section */}
-        <div style={{ flex: '1', padding: '1.5rem' }}>
+        <div style={{ flex: '1', padding: '1.5rem', minWidth: '300px' }}>
           <h1 style={{
-            fontSize: '32px',
+            fontSize: 'clamp(24px, 3vw, 32px)',
             fontWeight: 'bold',
             color: '#6b0000',
             marginBottom: '1rem'
           }}>Ready to Get Started?</h1>
           <h2 style={{
-            fontSize: '22px',
+            fontSize: 'clamp(18px, 2.5vw, 22px)',
             fontWeight: '600',
             color: '#000',
             marginBottom: '1.5rem'
@@ -120,7 +121,7 @@ const ContactUsPage = () => {
         </div>
 
         {/* Right Section - Contact Form */}
-        <div style={{ flex: '1', padding: '1.5rem' }}>
+        <div style={{ flex: '1', padding: '1.5rem', minWidth: '300px' }}>
           <div style={{
             width: '100%',
             background: '#f9f9f9',
@@ -130,7 +131,7 @@ const ContactUsPage = () => {
             boxShadow: '0px 6px 18px rgba(0,0,0,0.1)'
           }}>
             <h2 style={{
-              fontSize: '22px',
+              fontSize: 'clamp(18px, 2.5vw, 22px)',
               fontWeight: '600',
               color: '#000',
               textAlign: 'center',
@@ -140,7 +141,7 @@ const ContactUsPage = () => {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* Name */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '14px', fontWeight: '500',color:'black', }}>Name</label>
+                <label style={{ fontSize: '14px', fontWeight: '500', color: 'black' }}>Name</label>
                 <input
                   type="text"
                   value={formData.name}
@@ -151,14 +152,14 @@ const ContactUsPage = () => {
                     borderRadius: '6px',
                     border: '1px solid #ccc',
                     fontSize: '14px',
-                    color:'black',
+                    color: 'black',
                   }}
                 />
               </div>
 
               {/* Mobile */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '14px', fontWeight: '500',color:'black',  }}>Mobile Number</label>
+                <label style={{ fontSize: '14px', fontWeight: '500', color: 'black' }}>Mobile Number</label>
                 <input
                   type="tel"
                   value={formData.mobile}
@@ -169,14 +170,14 @@ const ContactUsPage = () => {
                     borderRadius: '6px',
                     border: '1px solid #ccc',
                     fontSize: '14px',
-                    color:'black',
+                    color: 'black',
                   }}
                 />
               </div>
 
               {/* Email */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '14px', fontWeight: '500',color:'black',  }}>Email</label>
+                <label style={{ fontSize: '14px', fontWeight: '500', color: 'black' }}>Email</label>
                 <input
                   type="email"
                   value={formData.email}
@@ -187,14 +188,14 @@ const ContactUsPage = () => {
                     borderRadius: '6px',
                     border: '1px solid #ccc',
                     fontSize: '14px',
-                    color:'black',
+                    color: 'black',
                   }}
                 />
               </div>
 
               {/* Description */}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label style={{ fontSize: '14px', fontWeight: '500',color:'black',  }}>Requirement</label>
+                <label style={{ fontSize: '14px', fontWeight: '500', color: 'black' }}>Requirement</label>
                 <textarea
                   value={formData.description}
                   onChange={handleInputChange('description')}
@@ -206,7 +207,7 @@ const ContactUsPage = () => {
                     border: '1px solid #ccc',
                     fontSize: '14px',
                     resize: 'vertical',
-                    color:'black',
+                    color: 'black',
                   }}
                 />
               </div>
@@ -217,7 +218,7 @@ const ContactUsPage = () => {
                 disabled={isSubmitting}
                 style={{
                   marginTop: '1.5rem',
-                  padding: '6px',
+                  padding: '12px',
                   background: 'linear-gradient(135deg,#adc1ff 0%,#0026ff 100%)',
                   color: '#fff',
                   fontSize: '18px',
@@ -225,7 +226,7 @@ const ContactUsPage = () => {
                   borderRadius: '6px',
                   cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   transition: 'all 0.2s ease',
-                  color:'black',
+                  border: 'none'
                 }}
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Now'}
