@@ -64,8 +64,8 @@ const ProductCard = ({ product, isActive, onClick }) => {
             <Image 
               src={imgError ? '/' : product.image} 
               alt={product.title}
-              width={isMobile ? 30 : 40}
-              height={isMobile ? 30 : 40}
+              width={isMobile ? 30 : 100}
+              height={isMobile ? 30 : 100}
               onError={() => setImgError(true)}
               style={{
                 filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'

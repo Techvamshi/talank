@@ -20,15 +20,27 @@ const ContactUsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log('Form submitted:', formData);
+
+    try {
+      const response = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert('Form submitted successfully!');
+        setFormData({ name: '', mobile: '', email: '', description: '' });
+      } else {
+        alert(data.message || 'Something went wrong!');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Failed to submit form.');
+    }
+
     setIsSubmitting(false);
-    setFormData({
-      name: '',
-      mobile: '',
-      email: '',
-      description: ''
-    });
   };
 
   return (

@@ -780,7 +780,7 @@ function Modulus() {
                   : '230px',
                 height: 'auto', 
                 borderRadius: '8px', 
-                opacity: frame.desktop.opacity 
+                opacity: '85%',
               }} 
             />
             <div style={{
@@ -817,7 +817,9 @@ function Modulus() {
                   ? '-22px'
                   : isMac
                   ? frame.desktop.textTop
-                  : '-10px'
+                  : '-10px',
+                  
+                  
               }}>
                 {frame.title}
               </h3>

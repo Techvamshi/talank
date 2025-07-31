@@ -14,18 +14,16 @@ function Head() {
   const observerRef = useRef(null)
 
   const navItems = [
-    { name: 'Home',     id: 'home' },
-    { name: 'About',    id: 'about' },
-    { name: 'Service',  id: 'offering' },
-    { name: 'Solution', id: 'circularMenu' },
-    { name: 'Team',     id: 'foundingTeam' },
-    { name: 'Contact',  id: 'contact' },
+    { name: 'Home', id: 'home' },
+    { name: 'About', id: 'about' },
+    { name: 'Consulting Solutions', id: 'offering' },
+    { name: 'Tech Solutions', id: 'circularMenu' },
+    { name: 'Team', id: 'foundingTeam' },
+    { name: 'Contact', id: 'contact' },
   ]
 
   useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+    const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
     checkIfMobile()
     window.addEventListener('resize', checkIfMobile)
     return () => window.removeEventListener('resize', checkIfMobile)
@@ -36,7 +34,7 @@ function Head() {
     setMenuOpen(false)
     const el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth' })
-    else    router.push(`/#${id}`)
+    else router.push(`/#${id}`)
   }
 
   useEffect(() => {
@@ -47,13 +45,12 @@ function Head() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
-          }
+          if (entry.isIntersecting) setActiveId(entry.target.id)
         })
       },
       { rootMargin: '-40% 0px -50% 0px', threshold: 0 }
     )
+
     observerRef.current = observer
 
     navItems.forEach(({ id }) => {
@@ -83,58 +80,42 @@ function Head() {
         width: '100%',
         maxWidth: '1200px',
         height: isMobile ? '50px' : '43px',
+        background: 'linear-gradient(to bottom, #288FD8, #002C9B)',
+        borderRadius: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 14px',
       }}>
-        {/* Header Background */}
-        <img 
-          src="/modifiedheader.png" 
-          alt="Header Background" 
+        {/* Logo - always visible on left */}
+        <div
+          onClick={() => handleClick('home')}
           style={{
-            width: '100%',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
             height: '100%',
-            objectFit: 'cover',
-            borderRadius: '8px',
-            position: 'absolute',
-            top: 0,
-            left: 0,
           }}
-        />
-
-        {/* Logo - Show only on mobile */}
-{isMobile && (
-  <div style={{
-    position: 'absolute',
-    left: '10px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    zIndex: 1,
-    cursor: 'pointer',
-  }} onClick={() => handleClick('home')}>
-    <img 
-      src="/TalankLogo.png" 
-      alt="Logo" 
-      style={{
-        height: '30px',
-        objectFit: 'contain',
-      }}
-    />
-  </div>
-)}
-
+        >
+          <img
+            src="/Logoimg.png"
+            alt="Logo"
+            style={{ height: '38px', width: 'auto', objectFit: 'contain' }}
+            onError={(e) => {
+              console.error('Logo failed to load:', e.target.src)
+              e.target.style.display = 'none'
+            }}
+          />
+        </div>
 
         {/* Desktop Navigation */}
         {!isMobile && (
           <div style={{
-            position: 'absolute',
-            top: 0,
-            height: '100%',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
             gap: '38px',
-            paddingRight: '20px',
-            marginLeft: '50px',
-            zIndex: 1,
+            marginRight:'7%',
+
           }}>
             {navItems.map((item) => {
               const isActive = activeId === item.id
@@ -168,15 +149,11 @@ function Head() {
           </div>
         )}
 
-        {/* Mobile Menu Open Button (☰) */}
+        {/* Mobile Menu Button (☰) */}
         {isMobile && !menuOpen && (
           <button
             onClick={() => setMenuOpen(true)}
             style={{
-              position: 'absolute',
-              right: '10px',
-              top: '50%',
-              transform: 'translateY(-50%)',
               background: 'rgba(255, 255, 255, 0.12)',
               border: '1px solid rgba(255,255,255,0.2)',
               borderRadius: '6px',
@@ -191,7 +168,6 @@ function Head() {
               zIndex: 2,
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
-              marginTop:'-2px',
             }}
           >
             ☰
@@ -216,7 +192,6 @@ function Head() {
             zIndex: 999,
             padding: '5rem 1rem 2rem',
           }}>
-            {/* Close Button inside menu */}
             <button
               onClick={() => setMenuOpen(false)}
               style={{
@@ -234,7 +209,6 @@ function Head() {
               ✕
             </button>
 
-            {/* Nav Items in mobile */}
             {navItems.map((item) => {
               const isActive = activeId === item.id
               return (

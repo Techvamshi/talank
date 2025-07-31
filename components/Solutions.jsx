@@ -1,467 +1,543 @@
-'use client';
-import { useState, useEffect } from 'react';
+'use client'
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export default function CircularMenu() {
-  const router = useRouter();
-  const [activeItem, setActiveItem] = useState('Strategic\nConsulting');
-  const [currentImage, setCurrentImage] = useState('/center.png');
+const ProductCard = ({ product, isActive, onClick }) => {
   const [isMobile, setIsMobile] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(false);
-  const [isMediumScreen, setIsMediumScreen] = useState(false);
+  const cardRef = useRef();
 
   useEffect(() => {
-    const checkScreenSize = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < 768);
-      setIsLargeScreen(width >= 1445);
-      setIsMediumScreen(width >= 1024 && width < 1446);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
-    
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const menuItems = [
+  return (
+    <motion.div
+      ref={cardRef}
+      onClick={onClick}
+      className="product-card"
+      style={{
+        background: '#ffffff',
+        borderRadius: '16px',
+        padding: isMobile ? '20px' : '24px',
+        cursor: 'pointer',
+        boxShadow: isActive 
+          ? `0 8px 32px ${product.color}20, 0 0 0 1px ${product.color}20` 
+          : '0 4px 24px rgba(0,0,0,0.05)',
+        position: 'relative',
+        overflow: 'hidden',
+        height: isActive ? (isMobile ? 'auto' : '580px') : (isMobile ? '120px' : '160px'),
+        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        marginBottom: '16px',
+        border: `1px solid ${isActive ? product.color + '20' : 'rgba(0,0,0,0.05)'}`,
+        display: 'flex',
+        flexDirection: 'column',
+
+      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ 
+        opacity: 1, 
+        y: 0,
+        transition: { type: 'spring', stiffness: 100 }
+      }}
+      whileHover={{ 
+        y: isMobile ? 0 : -8,
+        boxShadow: isActive 
+          ? `0 12px 40px ${product.color}30, 0 0 0 1px ${product.color}30`
+          : '0 8px 32px rgba(0,0,0,0.1)'
+      }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <div style={{ flex: isActive ? '0 0 auto' : '1' }}>
+        <motion.div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: isMobile ? '12px' : '16px'
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}>
+            <div style={{
+              width: isMobile ? '36px' : '48px',
+              height: isMobile ? '36px' : '48px',
+              borderRadius: '12px',
+              background: `${product.color}10`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: `1px solid ${product.color}20`
+            }}>
+              <span style={{
+                fontSize: isMobile ? '20px' : '24px',
+                color: product.color
+              }}>
+                {product.icon}
+              </span>
+            </div>
+            <h3 style={{
+              fontSize: isMobile ? '18px' : '20px',
+              fontWeight: '600',
+              margin: 0,
+              color: '#111827'
+            }}>
+              {product.title}
+            </h3>
+          </div>
+          <motion.div 
+            style={{
+              width: isMobile ? '32px' : '40px',
+              height: isMobile ? '32px' : '40px',
+              borderRadius: '50%',
+              background: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: product.color,
+              fontSize: isMobile ? '16px' : '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              border: `1px solid ${product.color}20`
+            }}
+            initial={{ rotate: -90, scale: 0 }}
+            animate={{ rotate: 0, scale: 1 }}
+            transition={{ 
+              delay: 0.4,
+              type: 'spring',
+              stiffness: 500,
+              damping: 10
+            }}
+            whileHover={{ rotate: isMobile ? 0 : 15 }}
+          >
+            {isActive ? '−' : '+'}
+          </motion.div>
+        </motion.div>
+        
+        <motion.p 
+          style={{
+            color: '#4B5563',
+            fontSize: isMobile ? '14px' : '15px',
+            marginBottom: isMobile ? '12px' : '16px',
+            lineHeight: 1.5
+          }}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          {product.tagline}
+        </motion.p>
+      </div>
+      
+      <AnimatePresence>
+        {isActive && (
+          <motion.div
+            style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column' }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ 
+              opacity: 1,
+              height: 'auto',
+              transition: { 
+                opacity: { duration: 0.3 },
+                height: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+              }
+            }}
+            exit={{ 
+              opacity: 0,
+              height: 0,
+              transition: { 
+                opacity: { duration: 0.2 },
+                height: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+              }
+            }}
+          >
+            <motion.div 
+              style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: isMobile ? '16px' : '20px',
+                marginBottom: isMobile ? '24px' : '32px',
+                flex: '1 1 auto'
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: 1,
+                transition: { staggerChildren: 0.1, delayChildren: 0.3 }
+              }}
+            >
+              {product.features.map((feature, i) => (
+                <motion.div 
+                  key={i} 
+                  style={{
+                    background: '#ffffff',
+                    padding: isMobile ? '16px' : '20px',
+                    borderRadius: '12px',
+                    boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+                    border: `1px solid ${product.color}10`
+                  }}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ type: 'spring', stiffness: 200 }}
+                  whileHover={{ y: isMobile ? 0 : -4 }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginBottom: isMobile ? '8px' : '12px'
+                  }}>
+                    <div style={{
+                      width: isMobile ? '28px' : '32px',
+                      height: isMobile ? '28px' : '32px',
+                      borderRadius: '8px',
+                      background: `${product.color}10`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginRight: isMobile ? '12px' : '16px',
+                      border: `1px solid ${product.color}20`
+                    }}>
+                      <span style={{ 
+                        color: product.color,
+                        fontSize: isMobile ? '14px' : '16px',
+                        fontWeight: '600'
+                      }}>
+                        {i+1}
+                      </span>
+                    </div>
+                    <h4 style={{
+                      color: '#111827',
+                      margin: '0',
+                      fontSize: isMobile ? '16px' : '17px',
+                      fontWeight: '600'
+                    }}>{feature.title}</h4>
+                  </div>
+                  <p style={{
+                    color: '#4B5563',
+                    fontSize: isMobile ? '13px' : '14px',
+                    margin: '0',
+                    marginLeft: isMobile ? '40px' : '48px',
+                    lineHeight: 1.5
+                  }}>{feature.description}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+            
+            <div style={{
+              flex: '0 0 auto',
+              paddingTop: isMobile ? '16px' : '24px',
+              borderTop: `1px solid ${product.color}10`,
+              marginTop: 'auto'
+            }}>
+              <motion.button
+                style={{
+                  padding: isMobile ? '14px 28px' : '16px 32px',
+                  background: product.color,
+                  border: 'none',
+                  borderRadius: '12px',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  fontSize: isMobile ? '15px' : '16px',
+                  boxShadow: `0 4px 16px ${product.color}40`,
+                  width: isMobile ? '100%' : 'auto',
+                  display: 'block',
+                  margin: '0 auto',
+                  marginBottom:'0%',
+                }}
+                whileHover={{ 
+                  scale: isMobile ? 1 : 1.05,
+                  boxShadow: `0 6px 20px ${product.color}60`
+                }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+              >
+                Request Demo
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+
+export default function DigiceuticsDashboard() {
+  const [activeProduct, setActiveProduct] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const productRefs = useRef({});
+  const router = useRouter();
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const products = [
     {
-      id: 1,
-      name: 'iQLIMS',
-      image: '/Solut1.png',
-      imagePosition: { 
-        desktop: { top: '-20px', left: '60%' },
-        medium: { top: '0px', left: '55%' },
-        default: { top: '0px', left: '50%' }
-      },
-      textPosition: { 
-        desktop: { top: '20px', left: '60%' },
-        medium: { top: '34px', left: '55%' },
-        default: { top: '40px', left: '50%' }
-      },
-      imageSize: { 
-        desktop: { width: '450px', height: '120px' },
-        medium: { width: '400px', height: '110px' },
-        default: { width: '350px', height: '100px' }
-      },
-      mobileImagePosition: { top: '-20px', left: '75%' },
-      mobileTextPosition: { top: '0px', left: '75%' },
-      mobileImageSize: { width: '250px', height: '80px' },
-      route: 'iQLIMS'
+      id: 'iQLIMS',
+      title: 'iQLIMS',
+      tagline: 'Modern laboratory informatics for improved QC/QA and data management',
+      icon: '🔬',
+      color: '#F59E0B',
+      features: [
+        {
+          title: 'E2E Diagnostic Solution',
+          description: 'Complete workflow from sample to report'
+        },
+        {
+          title: 'Clinical Trial Management',
+          description: 'Specialized tools for research labs'
+        },
+        {
+          title: 'Compliance Analytics',
+          description: 'Protocol analysis with automated alerts'
+        },
+        {
+          title: 'Modular Informatics',
+          description: 'Flexible MMIS architecture'
+        },
+        {
+          title: 'Workflow Automation',
+          description: 'Increased lab productivity'
+        },
+        {
+          title: 'Regulatory Compliance',
+          description: '21 CFR Part 11, HIPAA, HL7 ready'
+        }
+      ]
     },
     {
-      id: 2,
-      name: 'iQFORMS',
-      image: '/Solut3.png',
-      imagePosition: { 
-        desktop: { top: '90px', left: '58%' },
-        medium: { top: '100px', left: '55%' },
-        default: { top: '100px', left: '50%' }
-      },
-      textPosition: { 
-        desktop: { top: '130px', left: '58%' },
-        medium: { top: '135px', left: '55%' },
-        default: { top: '140px', left: '50%' }
-      },
-      imageSize: { 
-        desktop: { width: '250px', height: '120px' },
-        medium: { width: '220px', height: '110px' },
-        default: { width: '200px', height: '100px' }
-      },
-      mobileImagePosition: { top: '70px', left: '75%' },
-      mobileTextPosition: { top: '90px', left: '75%' },
-      mobileImageSize: { width: '180px', height: '80px' },
-      route: 'iQFORMS'
+      id: 'IoMT',
+      title: 'IoMT',
+      tagline: 'Secure medical device connectivity for healthcare automation',
+      icon: '⚕️',
+      color: '#8B5CF6',
+      features: [
+        {
+          title: 'Universal Connectivity',
+          description: 'RS232, WIFI, Bluetooth, USB, RJ45'
+        },
+        {
+          title: 'Secure Middleware',
+          description: 'Encrypted device-to-application communication'
+        },
+        {
+          title: 'Offline Storage',
+          description: 'Data persistence without network'
+        },
+        {
+          title: 'Protocol Translation',
+          description: 'Bridging diverse medical devices'
+        },
+        {
+          title: 'Healthcare Automation',
+          description: 'Environmental monitoring solutions'
+        },
+        {
+          title: 'Reliable Transmission',
+          description: 'Guaranteed data delivery'
+        }
+      ]
     },
     {
-      id: 3,
-      name: 'aiotroniX',
-      image: '/Solut2.png',
-      imagePosition: { 
-        desktop: { top: '225px', left: '54%' },
-        medium: { top: '230px', left: '55%' },
-        default: { top: '230px', left: '50%' }
-      },
-      textPosition: { 
-        desktop: { top: '250px', left: '54%' },
-        medium: { top: '250px', left: '55%' },
-        default: { top: '255px', left: '50%' }
-      },
-      imageSize: { 
-        desktop: { width: '300px', height: '100px' },
-        medium: { width: '280px', height: '90px' },
-        default: { width: '250px', height: '80px' }
-      },
-      mobileImagePosition: { top: '160px', left: '70%' },
-      mobileTextPosition: { top: '180px', left: '72%' },
-      mobileImageSize: { width: '200px', height: '80px' },
-      route: 'aiotroniX'
+      id: 'iQFORMS',
+      title: 'iQFORMS',
+      tagline: 'Cloud-based forms solution for clinical research and patient management',
+      icon: '📋',
+      color: '#3B82F6',
+      features: [
+        {
+          title: 'Real World EDC/eCRF',
+          description: 'Electronic data capture for research'
+        },
+        {
+          title: 'Site Management',
+          description: 'Tools for SMO operations'
+        },
+        {
+          title: 'Patient Wellness',
+          description: 'Integrated patient solutions'
+        },
+        {
+          title: 'AI Analytics',
+          description: 'Data models and insights'
+        },
+        {
+          title: 'Cloud Architecture',
+          description: 'Single-stack simplified IT'
+        },
+        {
+          title: 'Regulatory Ready',
+          description: 'Compliant data collection'
+        }
+      ]
     },
     {
-      id: 4,
-      name: 'ideateX',
-      image: '/Solut4.png',
-      imagePosition: { 
-        desktop: { top: '320px', left: '50%' },
-        medium: { top: '330px', left: '55%' },
-        default: { top: '330px', left: '50%' }
-      },
-      textPosition: { 
-        desktop: { top: '373px', left: '50%' },
-        medium: { top: '378px', left: '55%' },
-        default: { top: '380px', left: '50%' }
-      },
-      imageSize: { 
-        desktop: { width: '180px', height: '150px' },
-        medium: { width: '160px', height: '140px' },
-        default: { width: '140px', height: '130px' }
-      },
-      mobileImagePosition: { top: '230px', left: '70%' },
-      mobileTextPosition: { top: '258px', left: '69%' },
-      mobileImageSize: { width: '140px', height: '100px' },
-      route: 'ideateX'
-    },
-    {
-      id: 5,
-      name: 'ioMediX',
-      image: '/Solut5.png',
-      imagePosition: { 
-        desktop: { top: '410px', left: '50%' },
-        medium: { top: '430px', left: '55%' },
-        default: { top: '430px', left: '50%' }
-      },
-      textPosition: { 
-        desktop: { top: '475px', left: '50%' },
-        medium: { top: '487px', left: '55%' },
-        default: { top: '495px', left: '50%' }
-      },
-      imageSize: { 
-        desktop: { width: '220px', height: '180px' },
-        medium: { width: '200px', height: '160px' },
-        default: { width: '180px', height: '140px' }
-      },
-      mobileImagePosition: { top: '310px', left: '70%' },
-      mobileTextPosition: { top: '348px', left: '69%' },
-      mobileImageSize: { width: '160px', height: '120px' },
-      route: 'ioMediX'
-    },
-    {
-      id: 6,
-      name: '',
-      image: '/cirrr.png',
-      imagePosition: { 
-        desktop: { top: '0px', left: '-15%' },
-        medium: { top: '0px', left: '-10%' },
-        default: { top: '0px', left: '-5%' }
-      },
-      imageSize: { 
-        desktop: { width: '420px', height: '650px' },
-        medium: { width: '380px', height: '600px' },
-        default: { width: '340px', height: '550px' }
-      },
-      mobileImagePosition: { top: '-10px', left: '-10%' },
-      mobileImageSize: { width: '280px', height: '400px' }
-    },
-    {
-      id: 7,
-      name: '',
-      image: '/Arroww.png',
-      imagePosition: { 
-        desktop: { top: '-155px', left: '14%' },
-        medium: { top: '-120px', left: '12%' },
-        default: { top: '-140px', left: '5%' }
-      },
-      imageSize: { 
-        desktop: { width: '660px', height: '450px' },
-        medium: { width: '420px', height: '400px' },
-        default: { width: '370px', height: '350px' }
-      },
-      mobileImagePosition: { top: '-80px', left: '8%' },
-      mobileImageSize: { width: '120px', height: '280px' },
-      rotation: {
-        desktop: '3deg',
-        medium: '0deg',
-        default: '-15deg'
-      }
-    },
-    {
-      id: 8,
-      name: '',
-      image: '/Arr1.png',
-      imagePosition: { 
-        desktop: { top: '-48px', left: '17%' },
-        medium: { top: '-40px', left: '18%' },
-        default: { top: '-40px', left: '8%' }
-      },
-      imageSize: { 
-        desktop: { width: '560px', height: '450px' },
-        medium: { width: '350px', height: '400px' },
-        default: { width: '300px', height: '350px' }
-      },
-      mobileImagePosition: { top: '-28px', left: '20%' },
-      mobileImageSize: { width: '80px', height: '300px' },
-      rotation: {
-        desktop: '0deg',
-        medium: '2deg',
-        default: '-10deg'
-      }
-    },
-    {
-      id: 9,
-      name: '',
-      image: '/Arr2.png',
-      imagePosition: { 
-        desktop: { top: '72px', left: '17%' },
-        medium: { top: '72px', left: '19%' },
-        default: { top: '72px', left: '10%' }
-      },
-      imageSize: { 
-        desktop: { width: '500px', height: '450px' },
-        medium: { width: '300px', height: '400px' },
-        default: { width: '300px', height: '350px' }
-      },
-      mobileImagePosition: { top: '45px', left: '16%' },
-      mobileImageSize: { width: '60px', height: '300px' },
-      rotation: {
-        desktop: '2deg',
-        medium: '4deg',
-        default: '0deg'
-      }
-    },
-    {
-      id: 10,
-      name: '',
-      image: '/Arr3.png',
-      imagePosition: { 
-        desktop: { top: '190px', left: '14%' },
-        medium: { top: '200px', left: '18%' },
-        default: { top: '200px', left: '12%' }
-      },
-      imageSize: { 
-        desktop: { width: '500px', height: '450px' },
-        medium: { width: '340px', height: '400px' },
-        default: { width: '320px', height: '350px' }
-      },
-      mobileImagePosition: { top: '100px', left: '18%' },
-      mobileImageSize: { width: '80px', height: '300px' },
-      rotation: {
-        desktop: '0deg',
-        medium: '2deg',
-        default: '10deg'
-      }
-    },
-    {
-      id: 11,
-      name: '',
-      image: '/Arr4.png',
-      imagePosition: { 
-        desktop: { top: '290px', left: '10%' },
-        medium: { top: '300px', left: '13%' },
-        default: { top: '300px', left: '8%' }
-      },
-      imageSize: { 
-        desktop: { width: '550px', height: '450px' },
-        medium: { width: '400px', height: '400px' },
-        default: { width: '360px', height: '350px' }
-      },
-      mobileImagePosition: { top: '160px', left: '12%' },
-      mobileImageSize: { width: '130px', height: '300px' },
-      rotation: {
-        desktop: '0deg',
-        medium: '4deg',
-        default: '20deg'
-      }
+      id: 'aiotroniX',
+      title: 'aiotroniX',
+      tagline: 'Industrial IoT automation for smart factories and intelligent systems',
+      icon: '🏭',
+      color: '#EF4444',
+      features: [
+        {
+          title: 'Industrial Automation',
+          description: 'IIoT for smart manufacturing'
+        },
+        {
+          title: 'Real-time Monitoring',
+          description: 'Equipment and process tracking'
+        },
+        {
+          title: 'Predictive Analytics',
+          description: 'AI-driven operational insights'
+        },
+        {
+          title: 'Single-stack Architecture',
+          description: 'Unified device management'
+        },
+        {
+          title: 'Process Optimization',
+          description: 'Efficiency and productivity gains'
+        },
+        {
+          title: 'Safety Systems',
+          description: 'Adaptive risk mitigation'
+        }
+      ]
     }
   ];
 
-  const handleItemClick = (item) => {
-    setActiveItem(item.name);
-    setCurrentImage(item.image);
-    if (item.id <= 5) {
-      router.push(`/Digi#${item.route}`);
+  const handleProductClick = (product) => {
+    if (activeProduct?.id === product.id) {
+      setActiveProduct(null);
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else {
+      setActiveProduct(product);
+      setTimeout(() => {
+        productRefs.current[product.id]?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+      router.push(`#${product.id}`);
     }
   };
 
-  const getPositioning = (item) => {
-    if (isMobile) {
-      return {
-        imagePosition: item.mobileImagePosition,
-        textPosition: item.mobileTextPosition || {},
-        imageSize: item.mobileImageSize,
-        rotation: typeof item.rotation === 'object' ? item.rotation.default : item.rotation || '0deg'
-      };
-    }
-    
-    if (isLargeScreen) {
-      return {
-        imagePosition: item.imagePosition.desktop,
-        textPosition: item.textPosition?.desktop || {},
-        imageSize: item.imageSize.desktop,
-        rotation: typeof item.rotation === 'object' ? item.rotation.desktop : item.rotation || '0deg'
-      };
-    }
-    
-    if (isMediumScreen) {
-      return {
-        imagePosition: item.imagePosition.medium || item.imagePosition.desktop,
-        textPosition: item.textPosition?.medium || item.textPosition?.desktop || {},
-        imageSize: item.imageSize.medium || item.imageSize.desktop,
-        rotation: typeof item.rotation === 'object' ? item.rotation.medium : item.rotation || '0deg'
-      };
-    }
-    
-    return {
-      imagePosition: item.imagePosition.default || item.imagePosition.desktop,
-      textPosition: item.textPosition?.default || item.textPosition?.desktop || {},
-      imageSize: item.imageSize.default || item.imageSize.desktop,
-      rotation: typeof item.rotation === 'object' ? item.rotation.default : item.rotation || '0deg'
-    };
+  const setProductRef = (id, ref) => {
+    productRefs.current[id] = ref;
   };
-
-  // Calculate responsive margins
-  const leftContainerMargin = isMobile 
-    ? '0' 
-    : isLargeScreen 
-      ? '210px' 
-      : isMediumScreen 
-        ? '20px' 
-        : '-40px';
-
-  const rightContainerMargin = isMobile 
-    ? '0' 
-    : isLargeScreen 
-      ? '-170px' 
-      : isMediumScreen 
-        ? '-20px' 
-        : '40px';
 
   return (
-    <>
-      <div style={{ marginTop: '60px' }}>
-        <p style={{
-          fontSize: isMobile ? '24px' : '35px',
-          color: '#1447E6',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          textDecoration: 'underline',
-        }}>
-          Products and Solutions
-        </p>
-      </div>
-
-      <div style={{
-        display: 'flex',
-        height: isMobile ? '600px' : '100vh',
-        backgroundColor: '#fff',
-        padding: isMobile ? '10px' : '20px',
-        overflow: 'hidden',
-        position: 'relative',
-        flexDirection: 'row',
-        marginBottom: isMobile ? '-50px' : '0'
+    <div style={{
+      minHeight: '100vh',
+      padding: isMobile ? '24px 16px' : '48px 32px',
+      color: '#111827',
+      fontFamily: "'Inter', sans-serif",
+      background: '#F9FAFB',
+      maxWidth: '1200px',
+      margin: '0 auto'
+    }}>
+      <header style={{
+        marginBottom: isMobile ? '40px' : '64px',
+        textAlign: 'center'
       }}>
-        {/* Left side - Center circle */}
         <div style={{
-          width: isMobile ? '40%' : '50%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: isMobile ? '5px' : '20px',
-          marginLeft: leftContainerMargin,
-          transition: 'margin 0.3s ease'
+          width: isMobile ? '180px' : '240px',
+          height: isMobile ? '60px' : '80px',
+          margin: '0 auto',
+          position: 'relative',
+          marginBottom: isMobile ? '24px' : '32px'
         }}>
-          <div style={{
-            position: 'relative',
-            width: isMobile ? '200px' : '500px',
-            height: isMobile ? '200px' : '500px',
-            borderRadius: '50%',
-            backgroundColor: '#fff',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: isMobile ? '-180px' : isLargeScreen ? '-180px' : isMediumScreen ? '' : '',
-            marginLeft: isMobile 
-              ? '0' 
-              : isLargeScreen 
-                ? '-300px'     // For screens ≥1440px
-                : isMediumScreen 
-                  ? '-50px'   // For Mac screens (1024px–1439px)
-                  : '-450px', // For smaller desktop (768px–1023px)
-          }}>
-            <img
-              src={currentImage}
-              alt={activeItem}
-              style={{
-                width: isMobile ? '120px' : '400px',
-                height: isMobile ? '100px' : '300px',
-                objectFit: 'contain',
-                transition: 'all 0.3s ease'
-              }}
+          <Image 
+            src="/center.png" 
+            alt="Digiceutics Logo"
+            width={isMobile ? 180 : 240}
+            height={isMobile ? 60 : 80}
+            style={{
+              objectFit: 'contain',
+              width: '100%',
+              height: '100%',
+              filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.1))'
+            }}
+          />
+        </div>
+        
+        <motion.h1
+          style={{
+            fontSize: isMobile ? '28px' : '40px',
+            fontWeight: '700',
+            marginBottom: '16px',
+            background: 'linear-gradient(90deg, #3B82F6, #8B5CF6)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            lineHeight: 1.2
+          }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          Digital Solutions for Modern Healthcare
+        </motion.h1>
+        
+        <motion.p
+          style={{
+            fontSize: isMobile ? '16px' : '18px',
+            color: '#4B5563',
+            maxWidth: '700px',
+            margin: '0 auto',
+            lineHeight: 1.6
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          Transforming healthcare through innovative digital platforms that improve efficiency, compliance, and patient outcomes.
+        </motion.p>
+      </header>
+      
+      <motion.div 
+        style={{ display: 'grid', gap: isMobile ? '20px' : '24px' }}
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: 1,
+          transition: { staggerChildren: 0.1, delayChildren: 0.4 }
+        }}
+      >
+        {products.map((product, index) => (
+          <motion.div
+            key={product.id}
+            id={product.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 + 0.4 }}
+            ref={(ref) => setProductRef(product.id, ref)}
+          >
+            <ProductCard 
+              product={product}
+              isActive={activeProduct?.id === product.id}
+              onClick={() => handleProductClick(product)}
             />
-          </div>
-        </div>
-
-        {/* Right side - Floating images */}
-        <div style={{ 
-          width: isMobile ? '60%' : '50%', 
-          position: 'relative', 
-          height: isMobile ? '500px' : '100%',
-          marginLeft: rightContainerMargin,
-          transition: 'margin 0.3s ease',
-          
-        }}>
-          {menuItems.map((item) => {
-            const { imagePosition, textPosition, imageSize, rotation } = getPositioning(item);
-
-            return (
-              <div key={item.id}>
-                {/* Image */}
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  onClick={() => handleItemClick(item)}
-                  style={{
-                    position: 'absolute',
-                    top: imagePosition.top,
-                    left: imagePosition.left,
-                    width: imageSize.width,
-                    height: imageSize.height,
-                    objectFit: 'contain',
-                    cursor: item.name ? 'pointer' : 'default',
-                    borderRadius: '8px',
-                    padding: '5px',
-                    transform: `translate(-50%, 0) rotate(${rotation})`,
-                    transition: 'all 0.3s ease',
-                    zIndex: 2
-                  }}
-                />
-
-                {/* Text */}
-                {item.name && (
-                  <div
-                    onClick={() => handleItemClick(item)}
-                    style={{
-                      position: 'absolute',
-                      top: textPosition.top,
-                      left: textPosition.left,
-                      padding: isMobile ? '5px 8px' : '12px 16px',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: isMobile ? '10px' : '16px',
-                      whiteSpace: 'pre-line',
-                      cursor: 'pointer',
-                      transform: 'translate(-50%, 0)',
-                      backgroundColor: activeItem === item.name ? 'rgba(0,0,0,0.05)' : 'transparent',
-                      zIndex: 3
-                    }}
-                  >
-                    {item.name}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </>
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
   );
 }

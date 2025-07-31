@@ -1,6 +1,6 @@
 import React from 'react';
 
-function StrategicConsulting() {
+function first() {
   return (
     <div
       style={{
@@ -24,4 +24,4 @@ function StrategicConsulting() {
   );
 }
 
-export default StrategicConsulting;
+export default first;

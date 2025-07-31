@@ -5,8 +5,8 @@ const FoundingTeamSection = () => {
   const teamMembers = [
     {
       name: 'Deepak Gowda',
-      title: 'Director, Hi Tech Solution',
-      bio: 'Ravi brings over 25 years of extensive experience in Technology Solutioning and consulting services within the Life Sciences and Health Care domain.',
+      title: 'Director, Strategic Consulting',
+      bio: 'Deepak brings over 30 years of extensive experience in Contract Research Organizations (CRO) and Business Process Outsourcing (BPO) within the Life Sciences and Health Care domain.',
       expertise: [
         'Management Consulting',
         'Operations Leadership and P&L',
@@ -18,7 +18,7 @@ const FoundingTeamSection = () => {
     {
       name: 'Ravi Kumar L',
       title: 'Co-founder, Hi Tech Solution',
-      bio: 'Deepak brings over 30 years of extensive experience in Contract Research Organizations (CRO) and Business Process Outsourcing (BPO) within the Life Sciences and Health Care domain.',
+      bio: 'Ravi brings over 25 years of extensive experience in Technology Solutioning and consulting services within the Life Sciences and Health Care domain.',
       expertise: [
         'HiTech Solution Development',
         'AI/ML Solutions',

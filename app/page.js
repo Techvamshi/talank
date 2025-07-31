@@ -1,19 +1,23 @@
 'use client'
 
 import ContactUsPage from '@/components/Contact'
-import Diverse from '@/components/Diverse'
+
 import FoundingTeamSection from '@/components/Foundin'
-import Mandi from '@/components/Mod'
-import Modulus from '@/components/Modulus'
+
 import CircularMenu from '@/components/Solutions'
 import React, { useState, useEffect } from 'react'
 import Page from './hero/page'
-import AboutPage from '@/components/AboutPage'
-import OfferingSection from '@/components/Domain'
-import Head from '@/components/Head'
+
+import TALANKLoader from '@/components/TALANKLoader'
+import Aboutt from '@/components/Aboutt'
+import ConsultingSolution from '@/components/ConsultingSolution'
+import TechSolutions from '@/components/TechSolutions'
+import Consulting from '@/components/Consulting'
+import BusinessGrowthConsulting from '@/components/first'
 
 function HomePage() {
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -26,9 +30,21 @@ function HomePage() {
     // Add event listener for window resize
     window.addEventListener('resize', checkIfMobile);
 
+    // Simulate loading (replace with your actual loading logic)
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
     // Cleanup
-    return () => window.removeEventListener('resize', checkIfMobile);
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+      clearTimeout(timer);
+    };
   }, []);
+
+  if (isLoading) {
+    return <TALANKLoader />;
+  }
 
   return (
     <div style={{ overflowX: 'hidden' }}>
@@ -40,32 +56,41 @@ function HomePage() {
         marginTop: isMobile ? '-50px' : '-100px',
         paddingBottom: isMobile ? '40px' : '60px'
       }}>
-        <AboutPage />
+        <Aboutt style={{
+  justifyContent: 'center'
+}} />
       </section>
 
-      <section id="offering" style={{
-        padding: isMobile ? '40px 0' : '60px 0'
+    <BusinessGrowthConsulting />
+
+      <section style={{
+        transform:'scale(0.8)',
       }}>
-        <OfferingSection />
-      </section>
+          <Consulting  />
+        </section>
+
+      
 
       <section id="modulus" style={{
         padding: isMobile ? '40px 0' : '60px 0'
       }}>
-        <Modulus />
+        {/* <Modulus /> */}
+        <ConsultingSolution />
+
+        
+        
+      </section>
+      <section id=''>
+        <TechSolutions />
+
       </section>
 
-      {/* <section id="mandi"><Mandi /></section> */}
 
-      <section id="diverse" style={{
-        padding: isMobile ? '40px 0' : '60px 0'
-      }}>
-        <Diverse />
-      </section>
+
+    
 
       <section id="circularMenu" style={{
         padding: isMobile ? '40px 0' : '60px 0',
-        
         zIndex:'-1',
       }}>
         <CircularMenu />
@@ -88,3 +113,10 @@ function HomePage() {
 }
 
 export default HomePage
+
+
+  // <section id="offering" style={{
+  //       padding: isMobile ? '40px 0' : '60px 0'
+  //     }}>
+  //       {/* <OfferingSection /> */}
+  //     </section>
