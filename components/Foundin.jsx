@@ -40,9 +40,10 @@ const FoundingTeamSection = () => {
       <h2
         style={{
           textAlign: 'center',
-          fontSize: '28px',
-          marginBottom: '30px',
-          color: '#1a237e',
+          justifyContent:'center',
+          color:'black',
+          fontSize:'34px',
+          fontWeight:'bold',
         }}
       >
         Founding Team

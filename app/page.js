@@ -1,13 +1,10 @@
 'use client'
 
 import ContactUsPage from '@/components/Contact'
-
 import FoundingTeamSection from '@/components/Foundin'
-
 import CircularMenu from '@/components/Solutions'
 import React, { useState, useEffect } from 'react'
 import Page from './hero/page'
-
 import TALANKLoader from '@/components/TALANKLoader'
 import Aboutt from '@/components/Aboutt'
 import ConsultingSolution from '@/components/ConsultingSolution'
@@ -24,18 +21,13 @@ function HomePage() {
       setIsMobile(window.innerWidth <= 768);
     };
 
-    // Initial check
     checkIfMobile();
-
-    // Add event listener for window resize
     window.addEventListener('resize', checkIfMobile);
 
-    // Simulate loading (replace with your actual loading logic)
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
 
-    // Cleanup
     return () => {
       window.removeEventListener('resize', checkIfMobile);
       clearTimeout(timer);
@@ -47,76 +39,59 @@ function HomePage() {
   }
 
   return (
-    <div style={{ overflowX: 'hidden' }}>
-      <section id="home">
-        <Page />
-      </section>
+  <div style={{ overflowX: 'hidden' }}>
+    <section id="home">
+      <Page />
+    </section>
 
-      <section id="about" style={{
-        marginTop: isMobile ? '-50px' : '-100px',
-        paddingBottom: isMobile ? '40px' : '60px'
-      }}>
-        <Aboutt style={{
-  justifyContent: 'center'
-}} />
-      </section>
+    <section id="about" style={{
+      marginTop: isMobile ? '-50px' : '-100px',
+      paddingBottom: isMobile ? '40px' : '60px'
+    }}>
+      <Aboutt />
+    </section>
 
-    <BusinessGrowthConsulting />
+    {/* Business Growth section (no ID needed for navigation) */}
+    <section>
+      <BusinessGrowthConsulting />
+    </section>
 
-      <section style={{
-        transform:'scale(0.8)',
-      }}>
-          <Consulting  />
-        </section>
+    <section style={{ transform:'scale(0.8)' }}>
+      <Consulting />
+    </section>
 
-      
+    {/* Consulting Solutions section - where we want to navigate to */}
+    <section id="consulting-solutions" style={{ padding: isMobile ? '40px 0' : '60px 0' }}>
+      <ConsultingSolution />
+    </section>
 
-      <section id="modulus" style={{
-        padding: isMobile ? '40px 0' : '60px 0'
-      }}>
-        {/* <Modulus /> */}
-        <ConsultingSolution />
+    {/* Tech Solutions section */}
+    <section id="tech-solutions" style={{ justifyContent:'center', textAlign:'center' }}>
+      <TechSolutions />
+    </section>
 
-        
-        
-      </section>
-      <section id=''>
-        <TechSolutions />
+    {/* Circular Menu (part of Tech Solutions) */}
+    <section style={{
+      padding: isMobile ? '40px 0' : '60px 0',
+      zIndex:'-1',
+    }}>
+      <CircularMenu />
+    </section>
 
-      </section>
+    <section id="foundingTeam" style={{
+      marginTop: isMobile ? '40px' : '',
+      zIndex:'1',
+    }}>
+      <FoundingTeamSection />
+    </section>
 
-
-
-    
-
-      <section id="circularMenu" style={{
-        padding: isMobile ? '40px 0' : '60px 0',
-        zIndex:'-1',
-      }}>
-        <CircularMenu />
-      </section>
-
-      <section id="foundingTeam" style={{
-        marginTop: isMobile ? '40px' : '',
-        zIndex:'1',
-      }}>
-        <FoundingTeamSection />
-      </section>
-
-      <section id="contact" style={{
-        padding: isMobile ? '40px 0' : '60px 0'
-      }}>
-        <ContactUsPage />
-      </section>
-    </div>
-  )
+    <section id="contact" style={{
+      padding: isMobile ? '40px 0' : '60px 0'
+    }}>
+      <ContactUsPage />
+    </section>
+  </div>
+)
 }
 
 export default HomePage
-
-
-  // <section id="offering" style={{
-  //       padding: isMobile ? '40px 0' : '60px 0'
-  //     }}>
-  //       {/* <OfferingSection /> */}
-  //     </section>

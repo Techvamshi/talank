@@ -14,13 +14,13 @@ function Head() {
   const observerRef = useRef(null)
 
   const navItems = [
-    { name: 'Home', id: 'home' },
-    { name: 'About', id: 'about' },
-    { name: 'Consulting Solutions', id: 'offering' },
-    { name: 'Tech Solutions', id: 'circularMenu' },
-    { name: 'Team', id: 'foundingTeam' },
-    { name: 'Contact', id: 'contact' },
-  ]
+  { name: 'Home', id: 'home' },
+  { name: 'About', id: 'about' },
+  { name: 'Consulting Solutions', id: 'consulting-solutions' },
+  { name: 'Tech Solutions', id: 'tech-solutions' },
+  { name: 'Team', id: 'foundingTeam' },
+  { name: 'Contact', id: 'contact' },
+]
 
   useEffect(() => {
     const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
@@ -30,12 +30,23 @@ function Head() {
   }, [])
 
   const handleClick = (id) => {
-    setActiveId(id)
-    setMenuOpen(false)
-    const el = document.getElementById(id)
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
-    else router.push(`/#${id}`)
+  setActiveId(id);
+  setMenuOpen(false);
+  
+  if (id === 'home') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    const el = document.getElementById(id);
+    if (el) {
+      // Adjust this offset based on your header height
+      const yOffset = -100; 
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    } else {
+      router.push(`/#${id}`);
+    }
   }
+};
 
   useEffect(() => {
     if (typeof window === 'undefined') return
